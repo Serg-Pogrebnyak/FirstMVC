@@ -1,0 +1,32 @@
+﻿<Properties StartupConfiguration="{479A2C5B-3AE2-4524-8AE1-F5611F5BFE1E}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="FirstMVC/App_Start/RouteConfig.cs">
+    <Files>
+      <File FileName="FirstMVC/Controllers/HomeController.cs" Line="1" Column="1" />
+      <File FileName="FirstMVC/Web.config" Line="1" Column="1" />
+      <File FileName="FirstMVC/packages.config" Line="1" Column="1" />
+      <File FileName="FirstMVC/Global.asax" Line="1" Column="1" />
+      <File FileName="FirstMVC/App_Start/RouteConfig.cs" Line="11" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="FirstMVC" expanded="True">
+            <Node name="FirstMVC" expanded="True">
+              <Node name="App_Start" expanded="True">
+                <Node name="RouteConfig.cs" selected="True" />
+              </Node>
+              <Node name="Controllers" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.FirstMVC PreferredExecutionTarget="/Applications/Safari.app" />
+</Properties>
