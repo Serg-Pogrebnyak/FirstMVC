@@ -1,8 +1,11 @@
 ﻿<Properties StartupConfiguration="{462FCFFE-7BD0-4E24-A8DC-2205BBB0F56A}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="testMVCDocker/appsettings.json">
+  <MonoDevelop.Ide.Workbench ActiveDocument="testMVCDocker/Startup.cs">
     <Files>
       <File FileName="testMVCDocker/Dockerfile" Line="1" Column="1" />
-      <File FileName="testMVCDocker/appsettings.json" Line="1" Column="1" />
+      <File FileName="testMVCDocker/appsettings.json" Line="4" Column="5" />
+      <File FileName="testMVCDocker/Models/User.cs" Line="9" Column="2" />
+      <File FileName="testMVCDocker/Models/ApplicationContext.cs" Line="14" Column="2" />
+      <File FileName="testMVCDocker/Startup.cs" Line="47" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,7 +13,8 @@
           <Node name="testMVCDocker" expanded="True">
             <Node name="docker-compose" expanded="True" />
             <Node name="testMVCDocker" expanded="True">
-              <Node name="appsettings.json" selected="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>
