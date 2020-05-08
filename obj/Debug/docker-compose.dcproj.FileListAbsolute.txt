@@ -1,0 +1,10 @@
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/testMVCDocker.Views.dll
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/testMVCDocker.Views.pdb
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/appsettings.Development.json
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/appsettings.json
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/Properties/launchSettings.json
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/testMVCDocker.dll
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/testMVCDocker.pdb
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcprojAssemblyReference.cache
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcproj.CoreCompileInputs.cache
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcproj.CopyComplete

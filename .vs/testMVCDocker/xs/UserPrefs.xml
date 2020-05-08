@@ -1,0 +1,27 @@
+﻿<Properties StartupConfiguration="{462FCFFE-7BD0-4E24-A8DC-2205BBB0F56A}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="testMVCDocker/Dockerfile">
+    <Files>
+      <File FileName="testMVCDocker/Dockerfile" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="testMVCDocker" expanded="True">
+            <Node name="docker-compose" expanded="True" />
+            <Node name="testMVCDocker" expanded="True">
+              <Node name="Dockerfile" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.docker-compose PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.testMVCDocker PreferredExecutionTarget="/Applications/Safari.app" />
+</Properties>
