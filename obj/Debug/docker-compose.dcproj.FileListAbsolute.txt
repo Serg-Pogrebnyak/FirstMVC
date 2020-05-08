@@ -8,3 +8,6 @@
 /Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcprojAssemblyReference.cache
 /Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcproj.CoreCompileInputs.cache
 /Users/sergeypohrebnuak/Desktop/testMVCDocker/obj/Debug/docker-compose.dcproj.CopyComplete
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/Microsoft.Extensions.Configuration.Abstractions.dll
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/sergeypohrebnuak/Desktop/testMVCDocker/bin/Debug/Microsoft.Extensions.Logging.Abstractions.dll

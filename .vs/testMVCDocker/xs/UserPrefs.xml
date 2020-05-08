@@ -1,7 +1,8 @@
 ﻿<Properties StartupConfiguration="{462FCFFE-7BD0-4E24-A8DC-2205BBB0F56A}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="testMVCDocker/Dockerfile">
+  <MonoDevelop.Ide.Workbench ActiveDocument="testMVCDocker/appsettings.json">
     <Files>
       <File FileName="testMVCDocker/Dockerfile" Line="1" Column="1" />
+      <File FileName="testMVCDocker/appsettings.json" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -9,7 +10,7 @@
           <Node name="testMVCDocker" expanded="True">
             <Node name="docker-compose" expanded="True" />
             <Node name="testMVCDocker" expanded="True">
-              <Node name="Dockerfile" selected="True" />
+              <Node name="appsettings.json" selected="True" />
             </Node>
           </Node>
         </State>
