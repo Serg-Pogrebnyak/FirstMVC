@@ -70,3 +70,4 @@ C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\win\lib
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.csproj.CoreCompileInputs.cache
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
