@@ -22,7 +22,6 @@ namespace EmailApp
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
-                //client.AuthenticationMechanisms.Remove("XOAUTH2");
                 client.Authenticate("email", "password");
                 client.Send(emailMessage);
 
