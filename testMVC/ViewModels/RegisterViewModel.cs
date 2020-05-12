@@ -5,6 +5,7 @@ namespace CustomIdentityApp.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
