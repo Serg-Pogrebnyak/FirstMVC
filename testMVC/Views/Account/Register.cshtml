@@ -1,4 +1,9 @@
 ﻿@model CustomIdentityApp.ViewModels.RegisterViewModel
+    <style>
+        .marginForDiv {
+            margin-top: 10px;
+        }
+    </style>
 <h2>Регистрация нового пользователя</h2>
 <form method="post" asp-controller="Account" asp-action="Register">
     <div asp-validation-summary="ModelOnly"></div>
@@ -27,7 +32,7 @@
         <input asp-for="PasswordConfirm" />
         <span asp-validation-for="PasswordConfirm"></span>
     </div>
-    <div>
+    <div class="marginForDiv">
         <input type="submit" value="Регистрация" />
     </div>
 </form>
