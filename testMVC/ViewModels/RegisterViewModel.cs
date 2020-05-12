@@ -9,8 +9,12 @@ namespace CustomIdentityApp.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Год рождения")]
-        public int Year { get; set; }
+        [Display(Name = "Имя")]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Фамилия")]
+        public string SurName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
