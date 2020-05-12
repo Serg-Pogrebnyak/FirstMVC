@@ -68,7 +68,10 @@ C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\win-x86
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.csproj.CoreCompileInputs.cache
-C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\MailKit.dll
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\MimeKit.dll
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.csproj.CoreCompileInputs.cache
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.MvcApplicationPartsAssemblyInfo.cache
