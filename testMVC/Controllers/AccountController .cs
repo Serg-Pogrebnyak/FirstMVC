@@ -93,12 +93,21 @@ namespace CustomIdentityApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            
             if (ModelState.IsValid)
             {
+                
+                var user = await _userManager.FindByNameAsync(model.Email);
                 var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    if (!user.EmailConfirmed)
+                    {
+                        await _signInManager.SignOutAsync();
+                        ModelState.AddModelError("", "Email not confirmed");
+                        return View(model);
+                    }
                     // проверяем, принадлежит ли URL приложению
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
