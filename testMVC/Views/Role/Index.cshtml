@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+
+    <table class="table">
+        <tr>
+            <th>Роль</th>
+        </tr>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+            </tr>
+        }
+
+    </table>
+    <form method="get" asp-controller="Role" asp-action="Create">
+        <input class="btn btn-success" type="submit" value="Создать" />
+    </form>
