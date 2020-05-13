@@ -1,0 +1,19 @@
+﻿@model IEnumerable<CustomIdentityApp.Models.User>;
+
+    <table class="table">
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Емеил</th>
+            <th>Подтвержден ли Емеил</th>
+        </tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.SurName</td>
+                <td>@user.Email</td>
+                <td>@user.EmailConfirmed</td>
+            </tr>
+        }
+</table>

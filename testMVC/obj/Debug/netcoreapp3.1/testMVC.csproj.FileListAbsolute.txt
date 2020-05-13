@@ -75,3 +75,4 @@ C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\MimeKit.dll
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.csproj.CoreCompileInputs.cache
 C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\testMVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Serg\Desktop\mvcGITHUB\testMVC\obj\Debug\netcoreapp3.1\Razor\Views\Users\Index.cshtml.g.cs
