@@ -1,0 +1,12 @@
+﻿@model testMVC.ViewModels.CategoriesViewModel
+
+<form method="Post" asp-controller="Categories" asp-action="Create">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Создать" />
+</form>
