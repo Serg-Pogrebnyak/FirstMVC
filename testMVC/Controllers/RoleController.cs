@@ -45,5 +45,14 @@ namespace testMVC.Controllers
             
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string role)
+        {
+            IdentityRole roleForDelete = await _roleManager.FindByNameAsync(role);
+            await _roleManager.DeleteAsync(roleForDelete);
+
+            return RedirectToAction("Index");
+        }
     }
 }

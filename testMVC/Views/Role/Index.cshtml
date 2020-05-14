@@ -6,9 +6,15 @@
         </tr>
         @foreach (var role in Model)
         {
-            <tr>
-                <td>@role.Name</td>
-            </tr>
+        <tr>
+            <td>@role.Name</td>
+            <td>
+                <form method="Post" asp-controller="Role" asp-action="DeleteRole">
+                    <input type="hidden" name="role" value="@role.Name" />
+                    <input class="btn btn-danger" type="submit" value="Удалить" />
+                </form>
+            </td>
+        </tr>
         }
 
     </table>
