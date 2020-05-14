@@ -126,8 +126,7 @@ namespace CustomIdentityApp.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             // удаляем аутентификационные куки
