@@ -7,9 +7,11 @@ using CustomIdentityApp.ViewModels;
 using System.Collections.Generic;
 using testMVC.ViewModels;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace testMVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
@@ -60,9 +62,18 @@ namespace testMVC.Controllers
             } else
             {
                 await _userManager.RemoveFromRolesAsync(user, arrayOfRole);
-            }
-            
+            }   
+
             await _signInManager.RefreshSignInAsync(user);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string userEmail)//add - true, remove - false
+        {
+            User user = await _userManager.FindByEmailAsync(userEmail);
+            await _userManager.DeleteAsync(user);
+
             return RedirectToAction("Index");
         }
     }
