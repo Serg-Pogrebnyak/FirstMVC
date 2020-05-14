@@ -6,7 +6,7 @@
 {
     <p>@User.Identity.Name</p>
 
-    <form method="post" asp-controller="Account" asp-action="Logout">
+    <form method="get" asp-controller="Account" asp-action="Logout">
         <input type="submit" value="Выход" />
     </form>
 }
