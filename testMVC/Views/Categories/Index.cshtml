@@ -1,0 +1,14 @@
+﻿@model IEnumerable<testMVC.Models.Categories>
+
+<table class="table">
+    <tr>
+        <th>Категории</th>
+    </tr>
+    @foreach (var categories in Model)
+    {
+        <tr>
+            <td>@categories.Name</td>
+        </tr>
+    }
+
+</table>
