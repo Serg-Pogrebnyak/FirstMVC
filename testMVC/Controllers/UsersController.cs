@@ -6,6 +6,7 @@ using CustomIdentityApp.Models;
 using CustomIdentityApp.ViewModels;
 using System.Collections.Generic;
 using testMVC.ViewModels;
+using System;
 
 namespace testMVC.Controllers
 {
@@ -13,11 +14,13 @@ namespace testMVC.Controllers
     {
         UserManager<User> _userManager;
         RoleManager<IdentityRole> _roleManager;
+        SignInManager<User> _signInManager;
 
-        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -44,6 +47,23 @@ namespace testMVC.Controllers
                 Users = userList
             };
             return View(changeUserRole);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserRole(string role, string userEmail, bool addOrRemove)//add - true, remove - false
+        {
+            User user = await _userManager.FindByEmailAsync(userEmail);
+            string[] arrayOfRole = new string[] { role };
+            if (addOrRemove)
+            {
+                await _userManager.AddToRolesAsync(user, arrayOfRole);
+            } else
+            {
+                await _userManager.RemoveFromRolesAsync(user, arrayOfRole);
+            }
+            
+            await _signInManager.RefreshSignInAsync(user);
+            return RedirectToAction("Index");
         }
     }
 }

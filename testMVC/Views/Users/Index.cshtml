@@ -20,13 +20,24 @@
     <td>@user.EmailConfirmed</td>
     @foreach (var role in Model.AllRoles)
     {
-        <td>
-            <input type="checkbox" name="roles" value="@role.Name"
-                   @(user.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />
-            @role.Name
-        </td>
+<td>
+    <form method="Post" asp-controller="Users" asp-action="ChangeUserRole">
+        <input type="hidden" name="userEmail" value="@user.Email" />
+        <input type="hidden" name="role" value="@role.Name" />
+        @if (user.UserRoles.Contains(role.Name))
+        {
+            <input type="hidden" name="addOrRemove" value= "false" />
+            <input class="btn btn-danger" type="submit" value="Деактивировать" />
+        }
+        else
+        {
+            <input type="hidden" name="addOrRemove" value="true" />
+            <input class="btn btn-success" type="submit" value="  Активировать  " />
+        }
+    </form>
+</td>
 
-            }
+     }
     </tr>
     }
 </table>
