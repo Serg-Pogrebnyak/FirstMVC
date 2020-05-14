@@ -1,19 +1,32 @@
-﻿@model IEnumerable<CustomIdentityApp.Models.User>;
+﻿@model testMVC.ViewModels.ChangeUserRoleViewModel;
 
 <table class="table">
-        <tr>
-            <th>Имя</th>
-            <th>Фамилия</th>
-            <th>Емеил</th>
-            <th>Подтвержден ли Емеил</th>
-        </tr>
-        @foreach (var user in Model)
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Емеил</th>
+        <th>Подтвержден ли Емеил</th>
+        @foreach (var role in Model.AllRoles)
         {
-            <tr>
-                <td>@user.Name</td>
-                <td>@user.SurName</td>
-                <td>@user.Email</td>
-                <td>@user.EmailConfirmed</td>
-            </tr>
+            <th>@role.Name</th>
         }
+    </tr>
+    @foreach (var user in Model.Users)
+    {
+<tr>
+    <td>@user.Name</td>
+    <td>@user.SurName</td>
+    <td>@user.Email</td>
+    <td>@user.EmailConfirmed</td>
+    @foreach (var role in Model.AllRoles)
+    {
+        <td>
+            <input type="checkbox" name="roles" value="@role.Name"
+                   @(user.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />
+            @role.Name
+        </td>
+
+            }
+    </tr>
+    }
 </table>
