@@ -8,14 +8,23 @@ using testMVC.DataBase;
 using testMVC.Models;
 using testMVC.ViewModels;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace testMVC.Controllers
 {
     public class ProductsController : Controller
     {
         [HttpGet]
+        [Route("Products/Index")]
         public IActionResult Index()
+        {
+            using (DBContext db = new DBContext())
+            {
+                return View(db.Products.ToArray());
+            }
+        }
+
+        [HttpGet]
+        [Route("Products/Index/{id?}")]
+        public IActionResult Index(int id)
         {
             using (DBContext db = new DBContext())
             {

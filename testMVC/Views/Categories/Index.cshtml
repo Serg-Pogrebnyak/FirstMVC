@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<testMVC.Models.Categories>
-
+@if (this.User.IsInRole("Admin"))
+{
+    <form method="get" asp-controller="Categories" asp-action="Create">
+        <input class="btn btn-success" type="submit" value="Создать" />
+    </form>
+}
 <table class="table">
     <tr>
         <th>Категории</th>
@@ -7,15 +12,8 @@
     @foreach (var categories in Model)
     {
         <tr>
-            <td>@categories.Name</td>
+            <td><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index" asp-route-id="@categories.Id" >@categories.Name</a></td>
         </tr>
     }
 
 </table>
-@if (this.User.IsInRole("Admin"))
-{
-    <form method="get" asp-controller="Categories" asp-action="Create">
-        <input class="btn btn-success" type="submit" value="Создать" />
-    </form>
-}
-    
