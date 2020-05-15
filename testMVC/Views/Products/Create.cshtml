@@ -1,0 +1,38 @@
+﻿@model testMVC.ViewModels.ProductViewModel
+
+    <form method="Post" asp-controller="Products" asp-action="Create">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Name"></label><br />
+            <input asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+
+        <div>
+            <label asp-for="Price"></label><br />
+            <input asp-for="Price" />
+            <span asp-validation-for="Price"></span>
+        </div>
+
+        <div>
+            <label asp-for="Description"></label><br />
+            <input asp-for="Description" />
+            <span asp-validation-for="Description"></span>
+        </div>
+
+        <div>
+            <label asp-for="Category"></label><br />
+                <select id="Category" name="Category">
+                @foreach (var categories in ViewBag.Categories)
+                {
+                    <option>
+                        @categories.Name
+                    </option>
+
+                }
+                </select>
+            <span asp-validation-for="Category"></span>
+        </div>
+        
+        <input class="btn btn-success" type="submit" value="Создать" />
+    </form>
