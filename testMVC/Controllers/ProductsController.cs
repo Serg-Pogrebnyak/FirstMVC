@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ namespace testMVC.Controllers
     public class ProductsController : Controller
     {
         [HttpGet]
+        [Route("Products")]
         [Route("Products/Index")]
         public IActionResult Index()
         {
@@ -28,7 +30,16 @@ namespace testMVC.Controllers
         {
             using (DBContext db = new DBContext())
             {
-                return View(db.Products.ToArray());
+                Categories category = db.Categories.SingleOrDefault(e => e.Id == id);
+                if (category != null)
+                {
+                    db.Entry(category).Collection(c => c.Products).Load();
+                    return View(category.Products.ToArray());
+                } else
+                {
+                    return RedirectToAction("Index");
+                }
+                
             }
         }
 
