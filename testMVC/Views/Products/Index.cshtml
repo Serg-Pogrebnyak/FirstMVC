@@ -1,0 +1,22 @@
+﻿@model IEnumerable<testMVC.Models.Product>
+
+<table class="table">
+    <tr>
+        <th>Категории</th>
+        <th>Цена</th>
+    </tr>
+    @foreach (var categories in Model)
+    {
+        <tr>
+            <td>@categories.Name</td>
+            <td>@categories.Price</td>
+        </tr>
+    }
+
+</table>
+@if (this.User.IsInRole("Admin"))
+{
+    <form method="get" asp-controller="Products" asp-action="Create">
+        <input class="btn btn-success" type="submit" value="Создать" />
+    </form>
+}

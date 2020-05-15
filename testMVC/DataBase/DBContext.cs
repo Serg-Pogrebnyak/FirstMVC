@@ -7,7 +7,8 @@ namespace testMVC.DataBase
 {
     public class DBContext : DbContext
     {
-        public DbSet<Categories> Categoies { get; set; }
+        public DbSet<Categories> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DBContext()
         {
             Database.EnsureCreated();

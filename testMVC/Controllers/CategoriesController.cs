@@ -18,7 +18,7 @@ namespace testMVC.Controllers
         {
             using (DBContext db = new DBContext())
             {
-                Categories[] categories = db.Categoies.ToArray();
+                Categories[] categories = db.Categories.ToArray();
                 return View(categories);
             }
         }
@@ -34,7 +34,7 @@ namespace testMVC.Controllers
             using (DBContext db = new DBContext())
             {
                 Categories newCategories = new Categories { Name = name };
-                db.Categoies.Add(newCategories);
+                db.Categories.Add(newCategories);
                 db.SaveChanges();
             }
             return RedirectToAction("Index");
