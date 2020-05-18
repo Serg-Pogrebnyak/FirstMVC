@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using testMVC.DataBase;
 using testMVC.Models;
 using testMVC.ViewModels;
@@ -13,6 +14,13 @@ namespace testMVC.Controllers
 {
     public class ProductsController : Controller
     {
+
+        private readonly ILogger _logger;
+        public ProductsController(ILogger<ProductsController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet]
         [Route("Products")]
         [Route("Products/Index")]
@@ -90,6 +98,14 @@ namespace testMVC.Controllers
                     return View();
                 }
             }
+        }
+
+        [HttpPost]
+        public IActionResult Buy()
+        {
+            _logger.LogError(Request.Headers["Referer"].ToString());
+
+            return Redirect(Request.Headers["Referer"].ToString());//RedirectToAction(Request.Headers["Referer"].ToString());
         }
     }
 }
