@@ -22,6 +22,7 @@
             </div>
             <div class="modal-footer">
                 <form method="post" asp-controller="Products" asp-action="Buy">
+                    @Html.Hidden("productId", Model.Id)
                     <button type="submit" class="btn btn-secondary">Хорошо</button>
                 </form>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Удалить</button>

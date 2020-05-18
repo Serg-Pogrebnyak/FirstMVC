@@ -9,15 +9,19 @@ using Microsoft.Extensions.Logging;
 using testMVC.DataBase;
 using testMVC.Models;
 using testMVC.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using CustomIdentityApp.Models;
+using System.Security.Claims;
 
 namespace testMVC.Controllers
 {
     public class ProductsController : Controller
     {
-
+        private readonly UserManager<User> _userManager;
         private readonly ILogger _logger;
-        public ProductsController(ILogger<ProductsController> logger)
+        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger)
         {
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -101,11 +105,31 @@ namespace testMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy()
+        public async Task<IActionResult> Buy(int productId)
         {
-            _logger.LogError(Request.Headers["Referer"].ToString());
+            using (DBContext db = new DBContext())
+            {
+                User user = await GetCurrentUserAsync();
+                Basket currentUserBasket = db.Baskets.SingleOrDefault(basket => basket.UserId == user.Id);
+                if (currentUserBasket == null)
+                {
+                    Basket newBasket = new Basket
+                    {
+                        UserId = user.Id,
+                        ProductsId = new List<int>() { productId }
+                    };
+                    db.Baskets.Add(newBasket);
+                } else
+                {
+                    List<int> productList = currentUserBasket.ProductsId;
+                    productList.Add(productId);
+                    currentUserBasket.ProductsId = productList;
+                }
+                db.SaveChanges();
+            }
 
-            return Redirect(Request.Headers["Referer"].ToString());//RedirectToAction(Request.Headers["Referer"].ToString());
+            return Redirect(Request.Headers["Referer"].ToString());
         }
+        private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
     }
 }

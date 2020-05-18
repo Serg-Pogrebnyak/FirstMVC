@@ -9,6 +9,7 @@ namespace testMVC.DataBase
     {
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
         public DBContext()
         {
             Database.EnsureCreated();
