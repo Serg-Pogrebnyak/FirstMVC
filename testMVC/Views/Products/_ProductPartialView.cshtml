@@ -1,0 +1,8 @@
+﻿@model testMVC.Models.Product
+<td> @Model.Name</td>
+<td> @Model.Price</td>
+<td>
+    <form method="post" asp-controller="Products" asp-action="Buy">
+        <input class="btn btn-info" type="submit" value="Купить" />
+    </form>
+</td>

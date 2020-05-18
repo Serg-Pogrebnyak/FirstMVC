@@ -5,12 +5,11 @@
         <th>Категории</th>
         <th>Цена</th>
     </tr>
-    @foreach (var categories in Model)
+    @foreach (var product in Model)
     {
-        <tr>
-            <td>@categories.Name</td>
-            <td>@categories.Price</td>
-        </tr>
+<tr>
+    @await Html.PartialAsync("_ProductPartialView", product)
+</tr>
     }
 
 </table>
