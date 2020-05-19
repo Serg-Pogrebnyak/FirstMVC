@@ -1,0 +1,17 @@
+﻿@model IEnumerable<testMVC.Models.Product>
+<h3> Ваша корзина </h3>
+<table class="table">
+    <tr>
+        <th>Категории</th>
+        <th>Цена</th>
+    </tr>
+    @foreach (var product in Model)
+    {
+        <tr>
+            <td> @product.Name</td>
+            <td> @product.Price</td>
+        </tr>
+    }
+<tr><td colspan="2">Итоговая сумма: @ViewBag.TotalAmount</td></tr>
+
+</table>

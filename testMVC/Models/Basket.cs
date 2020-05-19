@@ -25,10 +25,5 @@ namespace testMVC.Models
                 InternalData = String.Join(";", _data.Select(p => p.ToString()).ToArray());
             }
         }
-
-        public int getTotalAmount()
-        {
-            return 100;
-        }
     }
 }
