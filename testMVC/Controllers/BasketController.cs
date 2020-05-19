@@ -25,7 +25,20 @@ namespace testMVC.Controllers
             using (DBContext db = new DBContext())
             {
                 User user = await GetCurrentUserAsync();
-                Basket currentUserBasket = db.Baskets.SingleOrDefault(basket => basket.UserId == user.Id);
+                var coockieId = HttpContext.Request.Cookies["BasketId"];
+
+                string basketId;
+                if (user != null)
+                {
+                    basketId = user.Id;
+                }
+                else
+                {
+                    basketId = coockieId;
+                }
+
+                Basket currentUserBasket = db.Baskets.SingleOrDefault(basket => basket.UserId == basketId);
+
                 if (currentUserBasket == null)
                 {
                     ViewBag.TotalAmount = 0;
