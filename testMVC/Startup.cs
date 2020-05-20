@@ -16,7 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using testMVC.Middleware;
 using BLL.Interfaces;
-using BLL.Business_Logic;
+using BLL.BusinessLogic;
 
 namespace testMVC
 {
@@ -32,6 +32,7 @@ namespace testMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IOrderService, BusinessLogic>();
             services.AddTransient< IUnitOfWork, EFUnitOfWork >();
             services.AddDbContext<ApplicationContext>(options =>

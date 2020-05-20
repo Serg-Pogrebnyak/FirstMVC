@@ -4,23 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DAL.Interfaces;
-using DAL.Entities;
+using BLL.Interfaces;
+using BLL.DTO;
 
 namespace testMVC.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly IUnitOfWork db;
-        public CategoriesController(IUnitOfWork unitOfWork)
+        private readonly ICategoryService _categoryService;
+        public CategoriesController(ICategoryService categoryService)
         {
-            db = unitOfWork;
+            _categoryService = categoryService;
         }
         [HttpGet]
         public IActionResult Index()
         {
-            Categories[] categories = db.Categories.GetAll().ToArray();
-            return View(categories);   
+            return View(_categoryService.getAllCategory()); ;   
         }
 
         [Authorize(Roles = "Admin")]
@@ -31,10 +30,7 @@ namespace testMVC.Controllers
         [HttpPost]
         public IActionResult Create(string name)
         {
-            Categories newCategories = new Categories { Name = name };
-            db.Categories.Create(newCategories);
-            db.Save();
-            
+            _categoryService.createNewCategory(name);
             return RedirectToAction("Index");
         }
     }

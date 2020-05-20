@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using BLL.DTO;
 using DAL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
-using AutoMapper;
 
-namespace BLL.Business_Logic
+namespace BLL.BusinessLogic
 {
     public class BusinessLogic : IOrderService
     {
