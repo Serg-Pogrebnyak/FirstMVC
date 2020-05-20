@@ -5,7 +5,7 @@ namespace DAL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Basket> Basket { get; }
+        IRepositoryBasket<Basket> Basket { get; }
         IRepository<Categories> Categories { get; }
         IRepository<Product> Product { get; }
         void Save();

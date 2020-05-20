@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DAL.Repositories
 {
-    class BasketRepository : IRepository<Basket>
+    class BasketRepository : IRepositoryBasket<Basket>
     {
         
         private DBContext db;
@@ -27,7 +27,12 @@ namespace DAL.Repositories
         {
             return db.Baskets.Find(id);
         }
-        
+
+        public Basket GetByUserId(String id)
+        {
+            return db.Baskets.SingleOrDefault(basket => basket.UserId == id);
+        }
+
         public void Create(Basket item)
         {
             db.Baskets.Add(item);

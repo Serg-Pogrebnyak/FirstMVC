@@ -25,7 +25,9 @@ namespace DAL.Repositories
 
         public Categories Get(int id)
         {
-            return db.Categories.Find(id);
+            Categories category = db.Categories.Find(id);
+            db.Entry(category).Collection(c => c.Products).Load();
+            return category;
         }
 
         public void Create(Categories item)

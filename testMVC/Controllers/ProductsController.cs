@@ -47,7 +47,6 @@ namespace testMVC.Controllers
                 Categories category = db.Categories.Get(id);
                 if (category != null)
                 {
-                    //db.Entry(category).Collection(c => c.Products).Load();
                     return View(category.Products.ToArray());
                 } else
                 {

@@ -19,7 +19,7 @@ namespace DAL.Repositories
         {
             db = new DBContext();
         }
-        public IRepository<Basket> Basket
+        public IRepositoryBasket<Basket> Basket
         {
             get
             {
