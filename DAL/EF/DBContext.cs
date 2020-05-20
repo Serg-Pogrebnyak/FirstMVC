@@ -3,12 +3,12 @@ using DAL.Entities;
 
 namespace DAL.EF
 {
-    public class DBContext : DbContext
+    class DBContext : DbContext
     {
-        public DbSet<Categories> Categories { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Basket> Baskets { get; set; }
-        public DBContext()
+        internal DbSet<Categories> Categories { get; set; }
+        internal DbSet<Product> Products { get; set; }
+        internal DbSet<Basket> Baskets { get; set; }
+        internal DBContext()
         {
             Database.EnsureCreated();
         }

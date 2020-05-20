@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DAL.Interfaces;
-using DAL.Entities;
 using BLL.Interfaces;
 
 namespace testMVC.Controllers

@@ -47,7 +47,7 @@ namespace DAL.Repositories
         {
             return db.Baskets.Where(predicate).ToList();
         }
-        
+
         public void Delete(int id)
         {
             Basket basket = db.Baskets.Find(id);
