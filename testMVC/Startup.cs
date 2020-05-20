@@ -33,7 +33,7 @@ namespace testMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IOrderService, BusinessLogic>();
+            services.AddTransient<IOrderService, OrderService>();
             services.AddTransient< IUnitOfWork, EFUnitOfWork >();
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

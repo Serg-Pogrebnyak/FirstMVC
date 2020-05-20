@@ -7,10 +7,10 @@ using DAL.Interfaces;
 
 namespace BLL.BusinessLogic
 {
-    public class BusinessLogic : IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _db;
-        public BusinessLogic(IUnitOfWork db)
+        public OrderService(IUnitOfWork db)
         {
             _db = db;
         }
