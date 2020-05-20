@@ -1,4 +1,4 @@
-﻿@model IEnumerable<testMVC.Models.Categories>
+﻿@model IEnumerable<DAL.Entities.Categories>
 @if (this.User.IsInRole("Admin"))
 {
     <form method="get" asp-controller="Categories" asp-action="Create">

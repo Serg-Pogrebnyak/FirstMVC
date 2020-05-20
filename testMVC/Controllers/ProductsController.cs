@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using testMVC.DataBase;
+using DAL.Interfaces;
+using DAL.Entities;
 using testMVC.Models;
 using testMVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -19,10 +20,13 @@ namespace testMVC.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger _logger;
-        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger)
+        private readonly IUnitOfWork db;
+
+        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _logger = logger;
+            db = unitOfWork;
         }
 
         [HttpGet]
@@ -30,40 +34,36 @@ namespace testMVC.Controllers
         [Route("Products/Index")]
         public IActionResult Index()
         {
-            using (DBContext db = new DBContext())
-            {
-                return View(db.Products.ToArray());
-            }
+            
+            
+                return View(db.Product.GetAll());
+            
         }
 
         [HttpGet]
         [Route("Products/Index/{id?}")]
         public IActionResult Index(int id)
         {
-            using (DBContext db = new DBContext())
-            {
-                Categories category = db.Categories.SingleOrDefault(e => e.Id == id);
+                Categories category = db.Categories.Get(id);
                 if (category != null)
                 {
-                    db.Entry(category).Collection(c => c.Products).Load();
+                    //db.Entry(category).Collection(c => c.Products).Load();
                     return View(category.Products.ToArray());
                 } else
                 {
                     return RedirectToAction("Index");
-                }
-                
-            }
+                }   
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            using (DBContext db = new DBContext())
-            { 
-                SelectList categories = new SelectList(db.Categories, "Name");
-                ViewBag.Categories = db.Categories.ToArray();
+            
+             
+                //SelectList categories = new SelectList(db.Categories.GetAll(), "Name");
+                ViewBag.Categories = db.Categories.GetAll();
                 return View();
-            }
+            
         }
 
         [HttpPost]
@@ -71,10 +71,11 @@ namespace testMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (DBContext db = new DBContext())
-                {
-                    Categories SelectedCategory = db.Categories.SingleOrDefault(catgories => catgories.Name == newProduct.Category);
-                    if (SelectedCategory != null)
+
+
+                //Categories SelectedCategory = db.Categories.Get(catgories => catgories.Name == newProduct.Category);
+                Categories SelectedCategory = db.Categories.Get(0);// - fix this
+                if (SelectedCategory != null)
                     {
                         Product product = new Product
                         {
@@ -83,64 +84,62 @@ namespace testMVC.Controllers
                             Description = newProduct.Description,
                             Category = SelectedCategory
                         };
-                        db.Products.Add(product);
-                        db.SaveChanges();
+                        db.Product.Create(product);
+                        db.Save();
                     } else
                     {
                         ModelState.AddModelError("", "Error in cloud - Selected category not found");
-                        ViewBag.Categories = db.Categories.ToArray();
+                    ViewBag.Categories = db.Categories.GetAll();
                         return View();
                     }
-                }
+                
                 return RedirectToAction("Index");
             } else
             {
-                using (DBContext db = new DBContext())
-                {
-                    SelectList categories = new SelectList(db.Categories, "Name");
-                    ViewBag.Categories = db.Categories.ToArray();
+                
+                
+                    //SelectList categories = new SelectList(db.Categories, "Name");
+                    ViewBag.Categories = db.Categories.GetAll();
                     return View();
-                }
+                
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Buy(int productId)
         {
-            using (DBContext db = new DBContext())
-            {
                 User user = await GetCurrentUserAsync();
-                var coockieId = HttpContext.Request.Cookies["BasketId"];
+                var coockieId = int.Parse(HttpContext.Request.Cookies["BasketId"]);
 
-                string basketId;
+                int basketId;
                 if (user != null)
                 {
-                    basketId = user.Id;
+                    basketId = int.Parse(user.Id);
                 }
                 else
                 {
                     basketId = coockieId;
                 }
 
-                Basket currentUserBasket = db.Baskets.SingleOrDefault(basket => basket.UserId == basketId);
+                Basket currentUserBasket = db.Basket.Get(basketId);
 
 
                 if (currentUserBasket == null)
                 {
                     Basket newBasket = new Basket
                     {
-                        UserId = basketId,
+                        UserId = basketId.ToString(),
                         ProductsId = new List<int>() { productId }
                     };
-                    db.Baskets.Add(newBasket);
+                    db.Basket.Create(newBasket);
                 } else
                 {
                     List<int> productList = currentUserBasket.ProductsId;
                     productList.Add(productId);
                     currentUserBasket.ProductsId = productList;
                 }
-                db.SaveChanges();
-            }
+                db.Save();
+            
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
