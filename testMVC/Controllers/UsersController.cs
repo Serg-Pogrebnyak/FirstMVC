@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
-using CustomIdentityApp.ViewModels;
 using System.Collections.Generic;
 using testMVC.ViewModels;
-using System;
 using Microsoft.AspNetCore.Authorization;
 
 namespace testMVC.Controllers

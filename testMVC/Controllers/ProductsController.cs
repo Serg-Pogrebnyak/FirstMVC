@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using DAL.Interfaces;
 using DAL.Entities;
-using testMVC.Models;
 using testMVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
-using System.Security.Claims;
 
 namespace testMVC.Controllers
 {
