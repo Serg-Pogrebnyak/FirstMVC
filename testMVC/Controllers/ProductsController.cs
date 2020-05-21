@@ -8,6 +8,7 @@ using DAL.Entities;
 using testMVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
+using BLL.Interfaces;
 
 namespace testMVC.Controllers
 {
@@ -16,12 +17,14 @@ namespace testMVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ILogger _logger;
         private readonly IUnitOfWork db;
+        private readonly ICategoryService _categoryService;
 
-        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork)
+        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork, ICategoryService categoryService)
         {
             _userManager = userManager;
             _logger = logger;
             db = unitOfWork;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -39,14 +42,7 @@ namespace testMVC.Controllers
         [Route("Products/Index/{id?}")]
         public IActionResult Index(int id)
         {
-                Categories category = db.Categories.Get(id);
-                if (category != null)
-                {
-                    return View(category.Products.ToArray());
-                } else
-                {
-                    return RedirectToAction("Index");
-                }   
+            return View(_categoryService.getAllProductInCategory(id));
         }
 
         [HttpGet]

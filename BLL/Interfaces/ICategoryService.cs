@@ -9,5 +9,7 @@ namespace BLL.Interfaces
     {
         public IEnumerable<CategoriesDTO> getAllCategory();
         public void createNewCategory(String Name);
+
+        public IEnumerable<ProductDTO> getAllProductInCategory(int id);
     }
 }

@@ -30,6 +30,12 @@ namespace BLL.BusinessLogic
             return categoriesMapper(_dataLayer.Categories.GetAll());
         }
 
+        public IEnumerable<ProductDTO> getAllProductInCategory(int id)
+        {
+            Categories category = _dataLayer.Categories.Get(id);
+            return productMapper(category);
+        }
+
         private IEnumerable<CategoriesDTO> categoriesMapper(IEnumerable<Categories> categories)
         {
             List<CategoriesDTO> categoriesDTO = new List<CategoriesDTO> { };
@@ -43,6 +49,23 @@ namespace BLL.BusinessLogic
                 categoriesDTO.Add(categoryDTO);
             }
             return categoriesDTO;
+        }
+
+        private IEnumerable<ProductDTO> productMapper(Categories categories)
+        {
+            List<ProductDTO> productDTOList = new List<ProductDTO> { };
+            foreach (Product product in categories.Products)
+            {
+                ProductDTO productDTO = new ProductDTO
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Description = product.Description
+                };
+                productDTOList.Add(productDTO);
+            }
+            return productDTOList;
         }
     }
 }
