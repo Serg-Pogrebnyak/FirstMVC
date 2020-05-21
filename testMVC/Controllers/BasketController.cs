@@ -4,6 +4,10 @@ using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BLL.Interfaces;
+using BLL.DTO;
+using AutoMapper;
+using System.Collections.Generic;
+using testMVC.ViewModels;
 
 namespace testMVC.Controllers
 {
@@ -26,7 +30,9 @@ namespace testMVC.Controllers
             String basketId = user != null ? user.Id : coockieId;
 
             ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(basketId);
-            return View(_orderService.GetAllProductsInBasket(basketId));
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductViewModel>()).CreateMapper();
+            var orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(basketId));
+            return View(orderList);
         }
 
         private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
