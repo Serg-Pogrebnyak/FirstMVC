@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using DAL.Interfaces;
-using DAL.Entities;
 using testMVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
 using BLL.Interfaces;
+using BLL.DTO;
 
 namespace testMVC.Controllers
 {
@@ -16,15 +13,15 @@ namespace testMVC.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger _logger;
-        private readonly IUnitOfWork db;
+        private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IOrderService _orderService;
 
-        public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork, ICategoryService categoryService)
+        public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IProductService productService, ICategoryService categoryService)
         {
             _userManager = userManager;
             _logger = logger;
-            db = unitOfWork;
+            _productService = productService;
             _categoryService = categoryService;
             _orderService = orderService;
         }
@@ -34,10 +31,7 @@ namespace testMVC.Controllers
         [Route("Products/Index")]
         public IActionResult Index()
         {
-            
-            
-                return View(db.Product.GetAll());
-            
+            return View(_productService.getAllProduct());
         }
 
         [HttpGet]
@@ -50,12 +44,8 @@ namespace testMVC.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            
-             
-                //SelectList categories = new SelectList(db.Categories.GetAll(), "Name");
-                ViewBag.Categories = db.Categories.GetAll();
-                return View();
-            
+            ViewBag.Categories = _categoryService.getAllCategory();
+            return View();
         }
 
         [HttpPost]
@@ -63,36 +53,26 @@ namespace testMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
-                //Categories SelectedCategory = db.Categories.Get(catgories => catgories.Name == newProduct.Category);
-                Categories SelectedCategory = db.Categories.Get(0);// - fix this
-                if (SelectedCategory != null)
-                    {
-                        Product product = new Product
+                if (_categoryService.containCategoryWithName(newProduct.Category))
+                {
+                    ProductDTO productDTO = new ProductDTO
                         {
                             Name = newProduct.Name,
                             Price = newProduct.Price,
-                            Description = newProduct.Description,
-                            Category = SelectedCategory
+                            Description = newProduct.Description
                         };
-                        db.Product.Create(product);
-                        db.Save();
-                    } else
-                    {
-                        ModelState.AddModelError("", "Error in cloud - Selected category not found");
-                    ViewBag.Categories = db.Categories.GetAll();
-                        return View();
-                    }
-                
+                    _productService.createNewProduct(productDTO, newProduct.Category);
+                } else
+                {
+                    ModelState.AddModelError("", "Error in cloud - Selected category not found");
+                    ViewBag.Categories = _categoryService.getAllCategory();
+                    return View();
+                }
                 return RedirectToAction("Index");
             } else
             {
-                
-                
-                    //SelectList categories = new SelectList(db.Categories, "Name");
-                    ViewBag.Categories = db.Categories.GetAll();
-                    return View();
+                ViewBag.Categories = _categoryService.getAllCategory();
+                return View();
                 
             }
         }

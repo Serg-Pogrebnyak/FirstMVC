@@ -5,6 +5,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Entities;
+using System.Linq;
 
 namespace BLL.BusinessLogic
 {
@@ -15,6 +16,7 @@ namespace BLL.BusinessLogic
         {
             _dataLayer = dataLayer;
         }
+
         public void createNewCategory(string name)
         {
             Categories category = new Categories
@@ -34,6 +36,12 @@ namespace BLL.BusinessLogic
         {
             Categories category = _dataLayer.Categories.Get(id);
             return productMapper(category);
+        }
+
+        public bool containCategoryWithName(String name)
+        {
+            Categories category = _dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
+            return category != null;
         }
 
         private IEnumerable<CategoriesDTO> categoriesMapper(IEnumerable<Categories> categories)

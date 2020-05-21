@@ -11,5 +11,7 @@ namespace BLL.Interfaces
         public void createNewCategory(String Name);
 
         public IEnumerable<ProductDTO> getAllProductInCategory(int id);
+
+        public bool containCategoryWithName(String name);
     }
 }
