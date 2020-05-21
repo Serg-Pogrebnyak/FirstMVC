@@ -18,13 +18,15 @@ namespace testMVC.Controllers
         private readonly ILogger _logger;
         private readonly IUnitOfWork db;
         private readonly ICategoryService _categoryService;
+        private readonly IOrderService _orderService;
 
-        public ProductsController(UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork, ICategoryService categoryService)
+        public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IUnitOfWork unitOfWork, ICategoryService categoryService)
         {
             _userManager = userManager;
             _logger = logger;
             db = unitOfWork;
             _categoryService = categoryService;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -98,39 +100,11 @@ namespace testMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Buy(int productId)
         {
-                User user = await GetCurrentUserAsync();
-                var coockieId = int.Parse(HttpContext.Request.Cookies["BasketId"]);
+            User user = await GetCurrentUserAsync();
+            var coockieId = HttpContext.Request.Cookies["BasketId"];
 
-                int basketId;
-                if (user != null)
-                {
-                    basketId = int.Parse(user.Id);
-                }
-                else
-                {
-                    basketId = coockieId;
-                }
-
-                Basket currentUserBasket = db.Basket.Get(basketId);
-
-
-                if (currentUserBasket == null)
-                {
-                    Basket newBasket = new Basket
-                    {
-                        UserId = basketId.ToString(),
-                        ProductsId = new List<int>() { productId }
-                    };
-                    db.Basket.Create(newBasket);
-                } else
-                {
-                    List<int> productList = currentUserBasket.ProductsId;
-                    productList.Add(productId);
-                    currentUserBasket.ProductsId = productList;
-                }
-                db.Save();
-            
-
+            string basketId = user != null ? user.Id : coockieId;
+            _orderService.addProductInBasket(basketId, productId);
             return Redirect(Request.Headers["Referer"].ToString());
         }
         private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);

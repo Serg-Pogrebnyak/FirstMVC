@@ -9,5 +9,7 @@ namespace BLL.Interfaces
     {
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId);
         public int GetOrderTotalAmount(String userId);
+
+        public void addProductInBasket(String userId, int productId);
     }
 }

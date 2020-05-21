@@ -13,6 +13,26 @@ namespace BLL.BusinessLogic
         public OrderService(IUnitOfWork db)
         {
             _db = db;
+        } 
+        public void addProductInBasket(String userId, int productId)
+        {
+            Basket basket = _db.Basket.GetByUserId(userId);
+            if (basket == null)
+            {
+                Basket newBasket = new Basket
+                {
+                    UserId = userId.ToString(),
+                    ProductsId = new List<int>() { productId }
+                };
+                _db.Basket.Create(newBasket);
+            }
+            else
+            {   
+                List<int> productList = basket.ProductsId;
+                productList.Add(productId);
+                basket.ProductsId = productList;
+            }
+            _db.Save();
         }
 
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId)
