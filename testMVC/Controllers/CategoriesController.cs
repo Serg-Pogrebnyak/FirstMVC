@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BLL.Interfaces;
+using BLL.DTO;
+using AutoMapper;
+using System.Collections.Generic;
+using testMVC.ViewModels;
 
 namespace testMVC.Controllers
 {
@@ -14,7 +18,10 @@ namespace testMVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_categoryService.getAllCategory()); ;   
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(_categoryService.getAllCategory());
+
+            return View(categoryList);
         }
 
         [Authorize(Roles = "Admin")]

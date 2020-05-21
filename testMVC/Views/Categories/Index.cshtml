@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BLL.DTO.CategoriesDTO>
+﻿@model IEnumerable<testMVC.ViewModels.CategoriesForDisplayViewModel>
 @if (this.User.IsInRole("Admin"))
 {
     <form method="get" asp-controller="Categories" asp-action="Create">
