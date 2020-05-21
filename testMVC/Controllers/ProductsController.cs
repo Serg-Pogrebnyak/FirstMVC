@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
 using BLL.Interfaces;
 using BLL.DTO;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace testMVC.Controllers
 {
@@ -31,20 +33,29 @@ namespace testMVC.Controllers
         [Route("Products/Index")]
         public IActionResult Index()
         {
-            return View(_productService.getAllProduct());
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_productService.getAllProduct());
+
+            return View(productList);
         }
 
         [HttpGet]
         [Route("Products/Index/{id?}")]
         public IActionResult Index(int id)
         {
-            return View(_categoryService.getAllProductInCategory(id));
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_categoryService.getAllProductInCategory(id));
+
+            return View(productList);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Categories = _categoryService.getAllCategory();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(_categoryService.getAllCategory());
+
+            ViewBag.Categories = categoryList;
             return View();
         }
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BLL.DTO.ProductDTO>
+﻿@model IEnumerable<testMVC.ViewModels.ProductForDisplayViewModel>
 
 <table class="table">
     <tr>
@@ -7,9 +7,9 @@
     </tr>
     @foreach (var product in Model)
     {
-<tr>
-    @await Html.PartialAsync("_ProductPartialView", product)
-</tr>
+        <tr>
+            @await Html.PartialAsync("_ProductPartialView", product)
+        </tr>
     }
 
 </table>
