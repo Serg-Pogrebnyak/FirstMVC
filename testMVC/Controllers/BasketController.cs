@@ -9,12 +9,12 @@ namespace testMVC.Controllers
 {
     public class BasketController : Controller
     {
-        private readonly IOrderService orderService;
+        private readonly IOrderService _orderService;
         private readonly UserManager<User> _userManager;
-        public BasketController(UserManager<User> userManager, IOrderService unitOfWork)
+        public BasketController(UserManager<User> userManager, IOrderService orderService)
         {
             _userManager = userManager;
-            orderService = unitOfWork;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -25,8 +25,8 @@ namespace testMVC.Controllers
 
             String basketId = user != null ? user.Id : coockieId;
 
-            ViewBag.TotalAmount = orderService.GetOrderTotalAmount(basketId);
-            return View(orderService.GetAllProductsInBasket(basketId));
+            ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(basketId);
+            return View(_orderService.GetAllProductsInBasket(basketId));
         }
 
         private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
