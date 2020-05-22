@@ -28,6 +28,63 @@ namespace BLL.BusinessLogic
             }
         }
 
+        public async Task<IEnumerable<ProductDTO>> GetAllProductsInBasket(String userId = null, String basketInCache = null)
+        {
+            if (userId != null)
+            {
+                Basket basket = _db.Basket.GetByUserId(userId);
+                return await Task.Run(() => mapperGetProductsFromBasket(basket.ProductsId));
+            } else
+            {
+                BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+                return await Task.Run(() => mapperGetProductsFromBasket(basketCache.ProductsId));
+            }
+        }
+
+        public async Task<int> GetOrderTotalAmount(String userId = null, String basketInCache = null)
+        {
+            if (userId != null)
+            {
+                Basket basket = _db.Basket.GetByUserId(userId);
+                return await Task.Run(() => mapperTotalAmountFromBasket(basket.ProductsId));
+            }
+            else
+            {
+                BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+                return await Task.Run(() => mapperTotalAmountFromBasket(basketCache.ProductsId));
+            }
+        }
+
+        //private function
+        private IEnumerable<ProductDTO> mapperGetProductsFromBasket(IEnumerable<int> productIdArray)
+        {
+            List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
+            foreach (int id in productIdArray)
+            {
+                Product product = _db.Product.Get(id);
+                ProductDTO productDTO = new ProductDTO
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Description = product.Description
+                };
+                productsInBasketList.Add(productDTO);
+            }
+            return productsInBasketList;
+        }
+
+        private int mapperTotalAmountFromBasket(IEnumerable<int> productIdArray)
+        {
+            int totalAmount = 0;
+            foreach (int id in productIdArray)
+            {
+                totalAmount += _db.Product.Get(id).Price;
+            }
+            return totalAmount;
+        }
+
+        //add product in local basket or cache
         private void addProductInDBBasket(String userId, int productId)
         {
             Basket basket = _db.Basket.GetByUserId(userId);
@@ -58,53 +115,14 @@ namespace BLL.BusinessLogic
                 {
                     ProductsId = new List<int>() { productId }
                 };
-            } else
+            }
+            else
             {
                 basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
                 basketCache.ProductsId.Add(productId);
             }
-            
+
             return JsonSerializer.Serialize<BasketCache>(basketCache);
-        }
-
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId)
-        {
-            Basket basket = _db.Basket.GetByUserId(userId);
-            return mapperGetProductsFromBasket(basket);
-        }
-
-        public int GetOrderTotalAmount(String userId)
-        {
-            Basket basket = _db.Basket.GetByUserId(userId);
-            return mapperTotalAmountFromBasket(basket);
-        }
-
-        private IEnumerable<ProductDTO> mapperGetProductsFromBasket(Basket basket)
-        {
-            List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
-            foreach (int id in basket.ProductsId)
-            {
-                Product product = _db.Product.Get(id);
-                ProductDTO productDTO = new ProductDTO
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Price = product.Price,
-                    Description = product.Description
-                };
-                productsInBasketList.Add(productDTO);
-            }
-            return productsInBasketList;
-        }
-
-        private int mapperTotalAmountFromBasket(Basket basket)
-        {
-            int totalAmount = 0;
-            foreach (int id in basket.ProductsId)
-            {
-                totalAmount += _db.Product.Get(id).Price;
-            }
-            return totalAmount;
         }
     }
 }

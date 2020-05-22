@@ -9,6 +9,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using testMVC.ViewModels;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace testMVC.Controllers
 {
@@ -26,13 +27,24 @@ namespace testMVC.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
-            String coockieId = HttpContext.Request.Cookies["BasketId"];
-
-            String basketId = user != null ? user.Id : coockieId;
-
-            ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(basketId);
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductViewModel>()).CreateMapper();
-            var orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(basketId));
+
+            List<ProductViewModel> orderList = new List<ProductViewModel> { };
+            if (user != null)
+            {
+                ViewBag.TotalAmount = await _orderService.GetOrderTotalAmount(user.Id);
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(await _orderService.GetAllProductsInBasket(userId: user.Id));
+                return View(orderList);
+            } else if (HttpContext.Session.Keys.Contains("basket"))
+            {
+                String cocieBasket = HttpContext.Session.GetString("basket");
+                ViewBag.TotalAmount = await _orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(await _orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
+                return View(orderList);
+            }
+
+            //if user not sign-in and don't add product in basket
+            ViewBag.TotalAmount = 0;
             return View(orderList);
         }
 

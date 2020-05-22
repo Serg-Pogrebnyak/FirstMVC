@@ -7,8 +7,8 @@ namespace BLL.Interfaces
 {
     public interface IOrderService
     {
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId);
-        public int GetOrderTotalAmount(String userId);
+        public Task<IEnumerable<ProductDTO>> GetAllProductsInBasket(String userId = null, String basketInCache = null);
+        public Task<int> GetOrderTotalAmount(String userId = null, String basketInCache = null);
 
         public Task<String> addProductInBasketAsync(int productId, String userId = null, String basketInCache = null);
     }
