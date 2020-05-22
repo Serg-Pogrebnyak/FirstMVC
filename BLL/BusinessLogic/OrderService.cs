@@ -4,6 +4,8 @@ using BLL.DTO;
 using DAL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
+using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace BLL.BusinessLogic
 {
@@ -14,7 +16,19 @@ namespace BLL.BusinessLogic
         {
             _db = db;
         } 
-        public void addProductInBasket(String userId, int productId)
+        public async Task<String> addProductInBasketAsync(String userId, int productId)
+        {
+            if (userId != null)
+            {
+                await Task.Run(() => addProductInDBBasket(userId, productId));
+                return null;
+            } else
+            {
+                return await Task.Run(() => addProductInCacheBasket(productId));
+            }
+        }
+
+        private void addProductInDBBasket(String userId, int productId)
         {
             Basket basket = _db.Basket.GetByUserId(userId);
             if (basket == null)
@@ -27,12 +41,21 @@ namespace BLL.BusinessLogic
                 _db.Basket.Create(newBasket);
             }
             else
-            {   
+            {
                 List<int> productList = basket.ProductsId;
                 productList.Add(productId);
                 basket.ProductsId = productList;
             }
             _db.Save();
+        }
+
+        private String addProductInCacheBasket(int productId)
+        {
+            BasketCache basketCache = new BasketCache
+            {
+                ProductsId = new List<int>() { productId }
+            };
+            return JsonSerializer.Serialize<BasketCache>(basketCache);
         }
 
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId)

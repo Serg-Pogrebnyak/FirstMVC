@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using BLL.DTO;
 
 namespace BLL.Interfaces
@@ -10,6 +10,6 @@ namespace BLL.Interfaces
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId);
         public int GetOrderTotalAmount(String userId);
 
-        public void addProductInBasket(String userId, int productId);
+        public Task<String> addProductInBasketAsync(String userId, int productId);
     }
 }

@@ -8,6 +8,7 @@ using BLL.Interfaces;
 using BLL.DTO;
 using AutoMapper;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace testMVC.Controllers
 {
@@ -92,10 +93,15 @@ namespace testMVC.Controllers
         public async Task<IActionResult> Buy(int productId)
         {
             User user = await GetCurrentUserAsync();
-            var coockieId = HttpContext.Request.Cookies["BasketId"];
-
-            string basketId = user != null ? user.Id : coockieId;
-            _orderService.addProductInBasket(basketId, productId);
+            if (user != null)
+            {
+                _orderService.addProductInBasketAsync(user.Id, productId);
+            } else
+            {
+                string basketCockie = await _orderService.addProductInBasketAsync(null, productId);
+                HttpContext.Session.SetString("basket", basketCockie);
+            }
+            
             return Redirect(Request.Headers["Referer"].ToString());
         }
         private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);

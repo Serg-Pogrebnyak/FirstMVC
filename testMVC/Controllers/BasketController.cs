@@ -8,6 +8,7 @@ using BLL.DTO;
 using AutoMapper;
 using System.Collections.Generic;
 using testMVC.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace testMVC.Controllers
 {
