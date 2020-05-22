@@ -10,6 +10,6 @@ namespace BLL.Interfaces
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId);
         public int GetOrderTotalAmount(String userId);
 
-        public Task<String> addProductInBasketAsync(String userId, int productId);
+        public Task<String> addProductInBasketAsync(int productId, String userId = null, String basketInCache = null);
     }
 }

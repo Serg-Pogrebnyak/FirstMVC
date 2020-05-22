@@ -16,7 +16,7 @@ namespace BLL.BusinessLogic
         {
             _db = db;
         } 
-        public async Task<String> addProductInBasketAsync(String userId, int productId)
+        public async Task<String> addProductInBasketAsync(int productId, String userId = null, String basketInCache = null)
         {
             if (userId != null)
             {
@@ -24,7 +24,7 @@ namespace BLL.BusinessLogic
                 return null;
             } else
             {
-                return await Task.Run(() => addProductInCacheBasket(productId));
+                return await Task.Run(() => addProductInCacheBasket(productId, basketInCache));
             }
         }
 
@@ -49,12 +49,21 @@ namespace BLL.BusinessLogic
             _db.Save();
         }
 
-        private String addProductInCacheBasket(int productId)
+        private String addProductInCacheBasket(int productId, String basketInCache)
         {
-            BasketCache basketCache = new BasketCache
+            BasketCache basketCache;
+            if (basketInCache == null)
             {
-                ProductsId = new List<int>() { productId }
-            };
+                basketCache = new BasketCache
+                {
+                    ProductsId = new List<int>() { productId }
+                };
+            } else
+            {
+                basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+                basketCache.ProductsId.Add(productId);
+            }
+            
             return JsonSerializer.Serialize<BasketCache>(basketCache);
         }
 
