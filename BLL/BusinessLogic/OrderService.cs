@@ -33,6 +33,10 @@ namespace BLL.BusinessLogic
             if (userId != null)
             {
                 Basket basket = _db.Basket.GetByUserId(userId);
+                if (basket == null)
+                {
+                    return new List<ProductDTO> { };
+                }
                 return mapperGetProductsFromBasket(basket.ProductsId);
             } else
             {
@@ -46,6 +50,10 @@ namespace BLL.BusinessLogic
             if (userId != null)
             {
                 Basket basket = _db.Basket.GetByUserId(userId);
+                if (basket == null)
+                {
+                    return 0;
+                }
                 return mapperTotalAmountFromBasket(basket.ProductsId);
             }
             else
