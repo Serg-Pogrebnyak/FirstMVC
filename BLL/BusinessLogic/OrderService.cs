@@ -16,42 +16,42 @@ namespace BLL.BusinessLogic
         {
             _db = db;
         } 
-        public async Task<String> addProductInBasketAsync(int productId, String userId = null, String basketInCache = null)
+        public String addProductInBasket(int productId, String userId = null, String basketInCache = null)
         {
             if (userId != null)
             {
-                await Task.Run(() => addProductInDBBasket(userId, productId));
+                addProductInDBBasket(userId, productId);
                 return null;
             } else
             {
-                return await Task.Run(() => addProductInCacheBasket(productId, basketInCache));
+                return addProductInCacheBasket(productId, basketInCache);
             }
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetAllProductsInBasket(String userId = null, String basketInCache = null)
+        public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId = null, String basketInCache = null)
         {
             if (userId != null)
             {
                 Basket basket = _db.Basket.GetByUserId(userId);
-                return await Task.Run(() => mapperGetProductsFromBasket(basket.ProductsId));
+                return mapperGetProductsFromBasket(basket.ProductsId);
             } else
             {
                 BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
-                return await Task.Run(() => mapperGetProductsFromBasket(basketCache.ProductsId));
+                return mapperGetProductsFromBasket(basketCache.ProductsId);
             }
         }
 
-        public async Task<int> GetOrderTotalAmount(String userId = null, String basketInCache = null)
+        public int GetOrderTotalAmount(String userId = null, String basketInCache = null)
         {
             if (userId != null)
             {
                 Basket basket = _db.Basket.GetByUserId(userId);
-                return await Task.Run(() => mapperTotalAmountFromBasket(basket.ProductsId));
+                return mapperTotalAmountFromBasket(basket.ProductsId);
             }
             else
             {
                 BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
-                return await Task.Run(() => mapperTotalAmountFromBasket(basketCache.ProductsId));
+                return mapperTotalAmountFromBasket(basketCache.ProductsId);
             }
         }
 

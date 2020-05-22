@@ -95,10 +95,10 @@ namespace testMVC.Controllers
             User user = await GetCurrentUserAsync();
             if (user != null)
             {
-                _orderService.addProductInBasketAsync(productId, userId: user.Id);
+                _orderService.addProductInBasket(productId, userId: user.Id);
             } else
             {
-                string basketCockie = await _orderService.addProductInBasketAsync(productId, basketInCache: HttpContext.Session.GetString("basket"));
+                string basketCockie = _orderService.addProductInBasket(productId, basketInCache: HttpContext.Session.GetString("basket"));
                 HttpContext.Session.SetString("basket", basketCockie);
             }
             

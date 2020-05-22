@@ -32,14 +32,14 @@ namespace testMVC.Controllers
             List<ProductViewModel> orderList = new List<ProductViewModel> { };
             if (user != null)
             {
-                ViewBag.TotalAmount = await _orderService.GetOrderTotalAmount(user.Id);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(await _orderService.GetAllProductsInBasket(userId: user.Id));
+                ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(user.Id);
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(userId: user.Id));
                 return View(orderList);
             } else if (HttpContext.Session.Keys.Contains("basket"))
             {
                 String cocieBasket = HttpContext.Session.GetString("basket");
-                ViewBag.TotalAmount = await _orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(await _orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
+                ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
                 return View(orderList);
             }
 
