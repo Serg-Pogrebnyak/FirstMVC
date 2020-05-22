@@ -26,7 +26,7 @@ namespace DAL.EF
             Categories cat2 = new Categories { Id = 2, Name = "Планшет" };
             Categories cat3 = new Categories { Id = 3, Name = "Монитор" };
             modelBuilder.Entity<Categories>().HasData(cat1, cat2, cat3);
-            //product
+            //product cat 1
             Product p1 = new Product
             {
                 Id = 1,
@@ -187,8 +187,90 @@ namespace DAL.EF
                 Description = "128GB",
                 CategoriesId = cat1.Id
             };
+            //product cat 2
+            Product p21 = new Product
+            {
+                Id = 21,
+                Name = "iPad Pro 11 (2019)",
+                Price = 28895,
+                Description = "Wi-Fi+Cellular 256GB",
+                CategoriesId = cat2.Id
+            };
+            Product p22 = new Product
+            {
+                Id = 22,
+                Name = "iPad Pro 11 (2020)",
+                Price = 26517,
+                Description = "Wi-Fi 128GB",
+                CategoriesId = cat2.Id
+            };
+            Product p23 = new Product
+            {
+                Id = 23,
+                Name = "iPad Pro 11 (2020)",
+                Price = 30425,
+                Description = "Wi-Fi+Cellular 128GB",
+                CategoriesId = cat2.Id
+            };
+            Product p24 = new Product
+            {
+                Id = 24,
+                Name = "iPad Pro 12.9 (2020)",
+                Price = 31821,
+                Description = "Wi-Fi 128GB",
+                CategoriesId = cat2.Id
+            };
+            Product p25 = new Product
+            {
+                Id = 25,
+                Name = "iPad Pro 12.9",
+                Price = 20399,
+                Description = "Wi-Fi+Cellular 64GB",
+                CategoriesId = cat2.Id
+            };
+            //product cat 3
+            Product p26 = new Product
+            {
+                Id = 26,
+                Name = "AOC 23.6",
+                Price = 5299,
+                Description = "144GH",
+                CategoriesId = cat3.Id
+            };
+            Product p27 = new Product
+            {
+                Id = 27,
+                Name = "Samsung Curved 27",
+                Price = 4444,
+                Description = "60GH",
+                CategoriesId = cat3.Id
+            };
+            Product p28 = new Product
+            {
+                Id = 28,
+                Name = "LG UltraGear 31.5",
+                Price = 9649,
+                Description = "144GH",
+                CategoriesId = cat3.Id
+            };
+            Product p29 = new Product
+            {
+                Id = 29,
+                Name = "Samsung Curved 27",
+                Price = 7999,
+                Description = "60GH",
+                CategoriesId = cat3.Id
+            };
+            Product p30 = new Product
+            {
+                Id = 30,
+                Name = "Samsung Curved 23.5",
+                Price = 3299,
+                Description = "60GH",
+                CategoriesId = cat3.Id
+            };
 
-            modelBuilder.Entity<Product>().HasData(new Product[] { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20 });
+            modelBuilder.Entity<Product>().HasData(new Product[] { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30 });
         }
     }
 }
