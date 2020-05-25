@@ -7,6 +7,7 @@ using DAL.Interfaces;
 using DAL.Entities;
 using System.Linq;
 using static BLL.Interfaces.ICategoryService;
+using AutoMapper;
 
 namespace BLL.BusinessLogic
 {
@@ -41,32 +42,21 @@ namespace BLL.BusinessLogic
 
         public IEnumerable<ProductDTO> selectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
         {
-            Categories category = _dataLayer.Categories.Get(id);
-            List<ProductDTO> productDTOList = productMapper(category).ToList();
-            
-            if (priceTo > priceFrom)
+            List<ProductDTO> productDTOList;
+            if (id != 0)
             {
-                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom && productDTO.Price <= priceTo).ToList();
+                Categories category = _dataLayer.Categories.Get(id);
+                productDTOList = productMapper(category).ToList();
+            } else
+            {
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>()).CreateMapper();
+                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(_dataLayer.Product.GetAll());
             }
-            else
-            {
-                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
-            };
-            switch (by)
-            {
-                case SortByEnum.priceToUp:
-                    return productDTOList.OrderBy(productDTO => productDTO.Price);
-                case SortByEnum.priceDoDown:
-                    return productDTOList.OrderByDescending(productDTO => productDTO.Price);
-                case SortByEnum.byName:
-                    return productDTOList.OrderBy(productDTO => productDTO.Name);
-                case SortByEnum.byNameDescending:
-                    return productDTOList.OrderByDescending(productDTO => productDTO.Name);
-            }
-            return productDTOList;
+
+            return selectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
         }
 
-            public bool containCategoryWithName(String name)
+        public bool containCategoryWithName(String name)
         {
             Categories category = _dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;
@@ -100,6 +90,30 @@ namespace BLL.BusinessLogic
                     Description = product.Description
                 };
                 productDTOList.Add(productDTO);
+            }
+            return productDTOList;
+        }
+        
+        private IEnumerable<ProductDTO> selectAndSortByCriteria(List<ProductDTO> productDTOList, int priceFrom, int priceTo, SortByEnum by)
+        {
+            if (priceTo > priceFrom)
+            {
+                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom && productDTO.Price <= priceTo).ToList();
+            }
+            else
+            {
+                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
+            };
+            switch (by)
+            {
+                case SortByEnum.priceToUp:
+                    return productDTOList.OrderBy(productDTO => productDTO.Price);
+                case SortByEnum.priceDoDown:
+                    return productDTOList.OrderByDescending(productDTO => productDTO.Price);
+                case SortByEnum.byName:
+                    return productDTOList.OrderBy(productDTO => productDTO.Name);
+                case SortByEnum.byNameDescending:
+                    return productDTOList.OrderByDescending(productDTO => productDTO.Name);
             }
             return productDTOList;
         }
