@@ -87,6 +87,12 @@ namespace BLL.BusinessLogic
                 return JsonSerializer.Serialize<BasketCache>(basketCache);
             }
         }
+        public void migrateBasketFromCookie(String userId, String basketInCache)
+        {
+            BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+            foreach (int productId in basketCache.ProductsId)
+                addProductInDBBasket(userId, productId);
+        }
 
         //private function
         private IEnumerable<ProductDTO> mapperGetProductsFromBasket(IEnumerable<int> productIdArray)

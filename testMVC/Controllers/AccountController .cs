@@ -5,6 +5,9 @@ using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using EmailApp;
 using Microsoft.AspNetCore.Authorization;
+using BLL.Interfaces;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace CustomIdentityApp.Controllers
 {
@@ -12,11 +15,13 @@ namespace CustomIdentityApp.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IOrderService _orderService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrderService orderService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _orderService = orderService;
         }
         [HttpGet]
         public IActionResult Register()
@@ -102,6 +107,12 @@ namespace CustomIdentityApp.Controllers
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    if (HttpContext.Session.Keys.Contains("basket"))
+                    {
+                        _orderService.migrateBasketFromCookie(user.Id, HttpContext.Session.GetString("basket"));
+                        HttpContext.Session.Remove("basket");
+                    }
+
                     if (!user.EmailConfirmed)
                     {
                         await _signInManager.SignOutAsync();
