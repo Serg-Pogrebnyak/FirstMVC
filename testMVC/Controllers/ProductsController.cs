@@ -50,6 +50,12 @@ namespace testMVC.Controllers
             return View(productList);
         }
 
+        [HttpPost]
+        public IActionResult Index(int PriceFrom, int PriceTo, string sort)
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Create()
         {
