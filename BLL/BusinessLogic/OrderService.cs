@@ -63,6 +63,31 @@ namespace BLL.BusinessLogic
             }
         }
 
+        public String deleteProductFromBasket(int productId, String userId = null, String basketInCache = null)
+        {
+            if (userId != null)
+            {
+                Basket basket = _db.Basket.GetByUserId(userId);
+                var productsList = basket.ProductsId;
+                productsList.Remove(productId);
+                if (productsList.Count == 0)
+                {
+                    _db.Basket.Delete(basket.Id);
+                } else
+                {
+                    basket.ProductsId = productsList;
+                }
+                _db.Save();
+                return null;
+            }
+            else
+            {
+                BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+                basketCache.ProductsId.Remove(productId);
+                return JsonSerializer.Serialize<BasketCache>(basketCache);
+            }
+        }
+
         //private function
         private IEnumerable<ProductDTO> mapperGetProductsFromBasket(IEnumerable<int> productIdArray)
         {

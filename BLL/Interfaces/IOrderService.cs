@@ -9,7 +9,7 @@ namespace BLL.Interfaces
     {
         public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId = null, String basketInCache = null);
         public int GetOrderTotalAmount(String userId = null, String basketInCache = null);
-
         public String addProductInBasket(int productId, String userId = null, String basketInCache = null);
+        public String deleteProductFromBasket(int productId, String userId = null, String basketInCache = null);
     }
 }

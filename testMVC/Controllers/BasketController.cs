@@ -27,25 +27,41 @@ namespace testMVC.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductViewModel>()).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductInBasketViewModel>()).CreateMapper();
 
-            List<ProductViewModel> orderList = new List<ProductViewModel> { };
+            List<ProductInBasketViewModel> orderList = new List<ProductInBasketViewModel> { };
             if (user != null)
             {
                 ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(user.Id);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(userId: user.Id));
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(_orderService.GetAllProductsInBasket(userId: user.Id));
                 return View(orderList);
             } else if (HttpContext.Session.Keys.Contains("basket"))
             {
                 String cocieBasket = HttpContext.Session.GetString("basket");
                 ViewBag.TotalAmount = _orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductViewModel>>(_orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
+                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(_orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
                 return View(orderList);
             }
 
             //if user not sign-in and don't add product in basket
             ViewBag.TotalAmount = 0;
             return View(orderList);
+        }
+
+        public async Task<ActionResult> delete(int productId)
+        {
+            User user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                _orderService.deleteProductFromBasket(productId, userId: user.Id);
+            }
+            else if (HttpContext.Session.Keys.Contains("basket"))
+            {
+                String cocieBasket = HttpContext.Session.GetString("basket");
+                string basketCockie = _orderService.deleteProductFromBasket(productId, basketInCache: cocieBasket);
+                HttpContext.Session.SetString("basket", basketCockie);
+            }
+            return RedirectToAction("Index");
         }
 
         private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
