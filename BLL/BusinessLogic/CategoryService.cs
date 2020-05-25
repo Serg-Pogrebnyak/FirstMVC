@@ -31,7 +31,9 @@ namespace BLL.BusinessLogic
 
         public IEnumerable<CategoriesDTO> getAllCategory()
         {
-            return categoriesMapper(_dataLayer.Categories.GetAll());
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
+            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(_dataLayer.Categories.GetAll());
+            return categoryDTOList;
         }
 
         public IEnumerable<ProductDTO> getAllProductInCategory(int id)
@@ -60,21 +62,6 @@ namespace BLL.BusinessLogic
         {
             Categories category = _dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;
-        }
-
-        private IEnumerable<CategoriesDTO> categoriesMapper(IEnumerable<Categories> categories)
-        {
-            List<CategoriesDTO> categoriesDTO = new List<CategoriesDTO> { };
-            foreach (Categories category in categories)
-            {
-                CategoriesDTO categoryDTO = new CategoriesDTO
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                };
-                categoriesDTO.Add(categoryDTO);
-            }
-            return categoriesDTO;
         }
 
         private IEnumerable<ProductDTO> productMapper(Categories categories)
