@@ -6,6 +6,7 @@ using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Entities;
 using System.Linq;
+using static BLL.Interfaces.ICategoryService;
 
 namespace BLL.BusinessLogic
 {
@@ -38,7 +39,30 @@ namespace BLL.BusinessLogic
             return productMapper(category);
         }
 
-        public bool containCategoryWithName(String name)
+        public IEnumerable<ProductDTO> selectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
+        {
+            Categories category = _dataLayer.Categories.Get(id);
+            List<ProductDTO> productDTOList = productMapper(category).ToList();
+            
+            if (priceTo > priceFrom)
+            {
+                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom && productDTO.Price <= priceTo).ToList();
+            }
+            else
+            {
+                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
+            };
+            if (by == SortByEnum.priceToUp)
+            {
+                return productDTOList.OrderBy(productDTO => productDTO.Price);
+            }
+            else
+            {
+                return productDTOList.OrderByDescending(productDTO => productDTO.Price);
+            };
+        }
+
+            public bool containCategoryWithName(String name)
         {
             Categories category = _dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;

@@ -9,6 +9,7 @@ using BLL.DTO;
 using AutoMapper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using static BLL.Interfaces.ICategoryService;
 
 namespace testMVC.Controllers
 {
@@ -51,9 +52,13 @@ namespace testMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(int PriceFrom, int PriceTo, string sort)
+        public IActionResult Index(int id, int PriceFrom, int PriceTo, int sort)
         {
-            return View();
+            SortByEnum by = (SortByEnum)sort;
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_categoryService.selectProduct(id, PriceFrom, PriceTo, by));
+
+            return View(productList);
         }
 
         [HttpGet]
