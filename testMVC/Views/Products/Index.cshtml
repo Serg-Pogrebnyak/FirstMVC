@@ -5,7 +5,7 @@
                 <td>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">$</span>
+                            <span class="input-group-text">₴</span>
                         </div>
                         <input type="text" class="form-control" placeholder="Price from" aria-label="Amount (to the nearest dollar)" name="PriceFrom">
                     </div>
@@ -13,7 +13,7 @@
                 <td>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">$</span>
+                            <span class="input-group-text">₴</span>
                         </div>
                         <input type="text" class="form-control" placeholder="Price to" aria-label="Amount (to the nearest dollar)" name="PriceTo">
                     </div>
@@ -23,14 +23,25 @@
                 <td colspan="2">
                     <div class="input-group">
                         <div class="input-group-prepend">
+                            <! -- сортировка по цене  -->
                             <div class="input-group-text">
-                                <input type="radio" id="sort1" name="sort" value="0" aria-label="Radio button for following text input">
+                                <input type="radio" id="sort1" name="sort" value="0">
                             </div>
-                            <input type="text" class="form-control" aria-label="Text input with radio button" value="По возрастанию" disabled>
+                            <input type="text" class="form-control" value="По возрастанию цены" disabled>
                             <div class="input-group-text">
-                                <input type="radio" id="sort2" name="sort" value="1" aria-label="Radio button for following text input">
+                                <input type="radio" id="sort2" name="sort" value="1">
                             </div>
-                            <input type="text" class="form-control" aria-label="Text input with radio button" value="По убыванию" disabled>
+                            <input type="text" class="form-control" value="По убыванию цены" disabled>
+
+                            <! -- сортировка по имени  -->
+                            <div class="input-group-text">
+                                <input type="radio" id="sort3" name="sort" value="2">
+                            </div>
+                            <input type="text" class="form-control" value="От а до я" disabled>
+                            <div class="input-group-text">
+                                <input type="radio" id="sort4" name="sort" value="3">
+                            </div>
+                            <input type="text" class="form-control" value="От я до а" disabled>                        
                         </div>  
                      </div>
                 </td>
@@ -40,7 +51,7 @@
     </form>
         <table class="table">
             <tr>
-                <th>Категории</th>
+                <th>Товары</th>
                 <th colspan="2">Цена</th>
             </tr>
             @foreach (var product in Model)

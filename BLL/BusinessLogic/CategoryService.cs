@@ -52,14 +52,18 @@ namespace BLL.BusinessLogic
             {
                 productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
             };
-            if (by == SortByEnum.priceToUp)
+            switch (by)
             {
-                return productDTOList.OrderBy(productDTO => productDTO.Price);
+                case SortByEnum.priceToUp:
+                    return productDTOList.OrderBy(productDTO => productDTO.Price);
+                case SortByEnum.priceDoDown:
+                    return productDTOList.OrderByDescending(productDTO => productDTO.Price);
+                case SortByEnum.byName:
+                    return productDTOList.OrderBy(productDTO => productDTO.Name);
+                case SortByEnum.byNameDescending:
+                    return productDTOList.OrderByDescending(productDTO => productDTO.Name);
             }
-            else
-            {
-                return productDTOList.OrderByDescending(productDTO => productDTO.Price);
-            };
+            return productDTOList;
         }
 
             public bool containCategoryWithName(String name)

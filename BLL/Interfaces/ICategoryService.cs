@@ -10,7 +10,9 @@ namespace BLL.Interfaces
         public enum SortByEnum : ushort
         {
             priceToUp = 0,
-            priceDoDown = 1
+            priceDoDown = 1,
+            byName = 2,
+            byNameDescending = 3
         }
         public IEnumerable<CategoriesDTO> getAllCategory();
         public void createNewCategory(String Name);
