@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BLL.Interfaces;
-using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TestMVC.Models;
 using TestMVC.ViewModels;
 
 namespace CustomIdentityApp.Controllers
@@ -155,7 +155,7 @@ namespace CustomIdentityApp.Controllers
         {
             if (this.HttpContext.Session.Keys.Contains("basket"))
             {
-                this.orderService.migrateBasketFromCookie(userId, this.HttpContext.Session.GetString("basket"));
+                this.orderService.MigrateBasketFromCookie(userId, this.HttpContext.Session.GetString("basket"));
                 this.HttpContext.Session.Remove("basket");
             }
         }

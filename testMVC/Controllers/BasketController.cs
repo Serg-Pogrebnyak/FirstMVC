@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TestMVC.Models;
 using TestMVC.ViewModels;
 
 namespace TestMVC.Controllers
@@ -55,12 +55,12 @@ namespace TestMVC.Controllers
             User user = await this.GetCurrentUserAsync();
             if (user != null)
             {
-                this.orderService.deleteProductFromBasket(productId, userId: user.Id);
+                this.orderService.DeleteProductFromBasket(productId, userId: user.Id);
             }
             else if (this.HttpContext.Session.Keys.Contains("basket"))
             {
                 string cocieBasket = this.HttpContext.Session.GetString("basket");
-                string basketCockie = this.orderService.deleteProductFromBasket(productId, basketInCache: cocieBasket);
+                string basketCockie = this.orderService.DeleteProductFromBasket(productId, basketInCache: cocieBasket);
                 this.HttpContext.Session.SetString("basket", basketCockie);
             }
 

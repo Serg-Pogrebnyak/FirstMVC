@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using System.Linq;
 
 namespace BLL.BusinessLogic
 {
     public class ProductService : IProductService
     {
-        private readonly IUnitOfWork _db;
+        private readonly IUnitOfWork db;
+
         public ProductService(IUnitOfWork db)
         {
-            _db = db;
+            this.db = db;
         }
-        public void createNewProduct(ProductDTO newProduct, String name)
+
+        public void CreateNewProduct(ProductDTO newProduct, string name)
         {
-            Categories category = _db.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
+            Categories category = this.db.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
             Product product = new Product
             {
                 Name = newProduct.Name,
@@ -26,14 +26,14 @@ namespace BLL.BusinessLogic
                 Description = newProduct.Description,
                 Category = category
             };
-            _db.Product.Create(product);
-            _db.Save();
+            this.db.Product.Create(product);
+            this.db.Save();
         }
 
-        public IEnumerable<ProductDTO> getAllProduct()
+        public IEnumerable<ProductDTO> GetAllProduct()
         {
             List<ProductDTO> productDTOList = new List<ProductDTO> { };
-            foreach (Product product in _db.Product.GetAll())
+            foreach (Product product in this.db.Product.GetAll())
             {
                 ProductDTO productDTO = new ProductDTO
                 {
@@ -44,6 +44,7 @@ namespace BLL.BusinessLogic
                 };
                 productDTOList.Add(productDTO);
             }
+
             return productDTOList;
         }
     }

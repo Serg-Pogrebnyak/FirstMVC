@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using DAL.EF;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.EF;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace DAL.Repositories
 {
@@ -17,15 +14,19 @@ namespace DAL.Repositories
 
         public EFUnitOfWork()
         {
-            db = new DBContext();
+            this.db = new DBContext();
         }
+
         public IRepositoryBasket<Basket> Basket
         {
             get
             {
-                if (basketRepository == null)
-                    basketRepository = new BasketRepository(db);
-                return basketRepository;
+                if (this.basketRepository == null)
+                {
+                    this.basketRepository = new BasketRepository(this.db);
+                }
+
+                return this.basketRepository;
             }
         }
 
@@ -33,9 +34,12 @@ namespace DAL.Repositories
         {
             get
             {
-                if (categoriesRepository == null)
-                    categoriesRepository = new CategoriesRepository(db);
-                return categoriesRepository;
+                if (this.categoriesRepository == null)
+                {
+                    this.categoriesRepository = new CategoriesRepository(this.db);
+                }
+
+                return this.categoriesRepository;
             }
         }
 
@@ -43,15 +47,18 @@ namespace DAL.Repositories
         {
             get
             {
-                if (productRepository == null)
-                    productRepository = new ProductRepository(db);
-                return productRepository;
+                if (this.productRepository == null)
+                {
+                    this.productRepository = new ProductRepository(this.db);
+                }
+
+                return this.productRepository;
             }
         }
-        
+
         public void Save()
         {
-            db.SaveChanges();
+            this.db.SaveChanges();
         }
 
         private bool disposed = false;
@@ -62,15 +69,16 @@ namespace DAL.Repositories
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    this.db.Dispose();
                 }
+
                 this.disposed = true;
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
     }

@@ -1,83 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using BLL.DTO;
-using DAL.Entities;
-using BLL.Interfaces;
-using DAL.Interfaces;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Text.Json;
+using BLL.DTO;
+using BLL.Interfaces;
+using DAL.Entities;
+using DAL.Interfaces;
 
 namespace BLL.BusinessLogic
 {
     public class OrderService : IOrderService
     {
-        private readonly IUnitOfWork _db;
+        private readonly IUnitOfWork db;
+
         public OrderService(IUnitOfWork db)
         {
-            _db = db;
-        } 
-        public String addProductInBasket(int productId, String userId = null, String basketInCache = null)
+            this.db = db;
+        }
+
+        public string AddProductInBasket(int productId, string userId = null, string basketInCache = null)
         {
             if (userId != null)
             {
-                addProductInDBBasket(userId, productId);
+                this.AddProductInDBBasket(userId, productId);
                 return null;
-            } else
+            }
+            else
             {
-                return addProductInCacheBasket(productId, basketInCache);
+                return this.AddProductInCacheBasket(productId, basketInCache);
             }
         }
 
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId = null, String basketInCache = null)
+        public IEnumerable<ProductDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null)
         {
             if (userId != null)
             {
-                Basket basket = _db.Basket.GetByUserId(userId);
+                Basket basket = this.db.Basket.GetByUserId(userId);
                 if (basket == null)
                 {
                     return new List<ProductDTO> { };
                 }
-                return mapperGetProductsFromBasket(basket.ProductsId);
-            } else
-            {
-                BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
-                return mapperGetProductsFromBasket(basketCache.ProductsId);
-            }
-        }
 
-        public int GetOrderTotalAmount(String userId = null, String basketInCache = null)
-        {
-            if (userId != null)
-            {
-                Basket basket = _db.Basket.GetByUserId(userId);
-                if (basket == null)
-                {
-                    return 0;
-                }
-                return mapperTotalAmountFromBasket(basket.ProductsId);
+                return this.MapperGetProductsFromBasket(basket.ProductsId);
             }
             else
             {
                 BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
-                return mapperTotalAmountFromBasket(basketCache.ProductsId);
+                return this.MapperGetProductsFromBasket(basketCache.ProductsId);
             }
         }
 
-        public String deleteProductFromBasket(int productId, String userId = null, String basketInCache = null)
+        public int GetOrderTotalAmount(string userId = null, string basketInCache = null)
         {
             if (userId != null)
             {
-                Basket basket = _db.Basket.GetByUserId(userId);
+                Basket basket = this.db.Basket.GetByUserId(userId);
+                if (basket == null)
+                {
+                    return 0;
+                }
+
+                return this.MapperTotalAmountFromBasket(basket.ProductsId);
+            }
+            else
+            {
+                BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
+                return this.MapperTotalAmountFromBasket(basketCache.ProductsId);
+            }
+        }
+
+        public string DeleteProductFromBasket(int productId, string userId = null, string basketInCache = null)
+        {
+            if (userId != null)
+            {
+                Basket basket = this.db.Basket.GetByUserId(userId);
                 var productsList = basket.ProductsId;
                 productsList.Remove(productId);
                 if (productsList.Count == 0)
                 {
-                    _db.Basket.Delete(basket.Id);
-                } else
+                    this.db.Basket.Delete(basket.Id);
+                }
+                else
                 {
                     basket.ProductsId = productsList;
                 }
-                _db.Save();
+
+                this.db.Save();
                 return null;
             }
             else
@@ -87,20 +93,23 @@ namespace BLL.BusinessLogic
                 return JsonSerializer.Serialize<BasketCache>(basketCache);
             }
         }
-        public void migrateBasketFromCookie(String userId, String basketInCache)
+
+        public void MigrateBasketFromCookie(string userId, string basketInCache)
         {
             BasketCache basketCache = JsonSerializer.Deserialize<BasketCache>(basketInCache);
             foreach (int productId in basketCache.ProductsId)
-                addProductInDBBasket(userId, productId);
+            {
+                this.AddProductInDBBasket(userId, productId);
+            }
         }
 
-        //private function
-        private IEnumerable<ProductDTO> mapperGetProductsFromBasket(IEnumerable<int> productIdArray)
+        // private function
+        private IEnumerable<ProductDTO> MapperGetProductsFromBasket(IEnumerable<int> productIdArray)
         {
             List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
             foreach (int id in productIdArray)
             {
-                Product product = _db.Product.Get(id);
+                Product product = this.db.Product.Get(id);
                 ProductDTO productDTO = new ProductDTO
                 {
                     Id = product.Id,
@@ -110,23 +119,25 @@ namespace BLL.BusinessLogic
                 };
                 productsInBasketList.Add(productDTO);
             }
+
             return productsInBasketList;
         }
 
-        private int mapperTotalAmountFromBasket(IEnumerable<int> productIdArray)
+        private int MapperTotalAmountFromBasket(IEnumerable<int> productIdArray)
         {
             int totalAmount = 0;
             foreach (int id in productIdArray)
             {
-                totalAmount += _db.Product.Get(id).Price;
+                totalAmount += this.db.Product.Get(id).Price;
             }
+
             return totalAmount;
         }
 
-        //add product in local basket or cache
-        private void addProductInDBBasket(String userId, int productId)
+        // add product in local basket or cache
+        private void AddProductInDBBasket(string userId, int productId)
         {
-            Basket basket = _db.Basket.GetByUserId(userId);
+            Basket basket = this.db.Basket.GetByUserId(userId);
             if (basket == null)
             {
                 Basket newBasket = new Basket
@@ -134,7 +145,7 @@ namespace BLL.BusinessLogic
                     UserId = userId.ToString(),
                     ProductsId = new List<int>() { productId }
                 };
-                _db.Basket.Create(newBasket);
+                this.db.Basket.Create(newBasket);
             }
             else
             {
@@ -142,10 +153,11 @@ namespace BLL.BusinessLogic
                 productList.Add(productId);
                 basket.ProductsId = productList;
             }
-            _db.Save();
+
+            this.db.Save();
         }
 
-        private String addProductInCacheBasket(int productId, String basketInCache)
+        private string AddProductInCacheBasket(int productId, string basketInCache)
         {
             BasketCache basketCache;
             if (basketInCache == null)

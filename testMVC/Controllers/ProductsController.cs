@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using CustomIdentityApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TestMVC.Models;
 using TestMVC.ViewModels;
 using static BLL.Interfaces.ICategoryService;
 
@@ -36,7 +36,7 @@ namespace TestMVC.Controllers
         public IActionResult Index()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.productService.getAllProduct());
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.productService.GetAllProduct());
 
             return this.View(productList);
         }
@@ -46,7 +46,7 @@ namespace TestMVC.Controllers
         public IActionResult Index(int id)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.getAllProductInCategory(id));
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.GetAllProductInCategory(id));
 
             return this.View(productList);
         }
@@ -56,7 +56,7 @@ namespace TestMVC.Controllers
         {
             SortByEnum by = (SortByEnum)sort;
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.selectProduct(id, priceFrom, priceTo, by));
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.SelectProduct(id, priceFrom, priceTo, by));
 
             return this.View(productList);
         }
@@ -65,7 +65,7 @@ namespace TestMVC.Controllers
         public IActionResult Create()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.getAllCategory());
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
 
             this.ViewBag.Categories = categoryList;
             return this.View();
@@ -76,7 +76,7 @@ namespace TestMVC.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                if (this.categoryService.containCategoryWithName(newProduct.Category))
+                if (this.categoryService.ContainCategoryWithName(newProduct.Category))
                 {
                     ProductDTO productDTO = new ProductDTO
                         {
@@ -84,12 +84,12 @@ namespace TestMVC.Controllers
                             Price = newProduct.Price,
                             Description = newProduct.Description
                         };
-                    this.productService.createNewProduct(productDTO, newProduct.Category);
+                    this.productService.CreateNewProduct(productDTO, newProduct.Category);
                 }
                 else
                 {
                     this.ModelState.AddModelError(string.Empty, "Error in cloud - Selected category not found");
-                    this.ViewBag.Categories = this.categoryService.getAllCategory();
+                    this.ViewBag.Categories = this.categoryService.GetAllCategory();
                     return this.View();
                 }
 
@@ -97,7 +97,7 @@ namespace TestMVC.Controllers
             }
             else
             {
-                this.ViewBag.Categories = this.categoryService.getAllCategory();
+                this.ViewBag.Categories = this.categoryService.GetAllCategory();
                 return this.View();
             }
         }
@@ -108,11 +108,11 @@ namespace TestMVC.Controllers
             User user = await this.GetCurrentUserAsync();
             if (user != null)
             {
-                this.orderService.addProductInBasket(productId, userId: user.Id);
+                this.orderService.AddProductInBasket(productId, userId: user.Id);
             }
             else
             {
-                string basketCockie = this.orderService.addProductInBasket(productId, basketInCache: this.HttpContext.Session.GetString("basket"));
+                string basketCockie = this.orderService.AddProductInBasket(productId, basketInCache: this.HttpContext.Session.GetString("basket"));
                 this.HttpContext.Session.SetString("basket", basketCockie);
             }
 

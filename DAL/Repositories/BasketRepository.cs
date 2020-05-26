@@ -1,58 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DAL.EF;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.EF;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace DAL.Repositories
 {
-    class BasketRepository : IRepositoryBasket<Basket>
+    public class BasketRepository : IRepositoryBasket<Basket>
     {
-        
         private DBContext db;
 
         public BasketRepository(DBContext context)
         {
-            db = context;
+            this.db = context;
         }
 
         public IEnumerable<Basket> GetAll()
         {
-            return db.Baskets;
+            return this.db.Baskets;
         }
 
         public Basket Get(int id)
         {
-            return db.Baskets.Find(id);
+            return this.db.Baskets.Find(id);
         }
 
-        public Basket GetByUserId(String id)
+        public Basket GetByUserId(string id)
         {
-            return db.Baskets.SingleOrDefault(basket => basket.UserId == id);
+            return this.db.Baskets.SingleOrDefault(basket => basket.UserId == id);
         }
 
         public void Create(Basket item)
         {
-            db.Baskets.Add(item);
+            this.db.Baskets.Add(item);
         }
 
         public void Update(Basket item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            this.db.Entry(item).State = EntityState.Modified;
         }
 
         public IEnumerable<Basket> Find(Func<Basket, bool> predicate)
         {
-            return db.Baskets.Where(predicate).ToList();
+            return this.db.Baskets.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Basket basket = db.Baskets.Find(id);
+            Basket basket = this.db.Baskets.Find(id);
             if (basket != null)
-                db.Baskets.Remove(basket);
+            {
+                _ = this.db.Baskets.Remove(basket);
+            }
         }
     }
 }

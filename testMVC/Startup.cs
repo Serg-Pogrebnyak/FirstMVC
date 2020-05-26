@@ -1,7 +1,6 @@
 using System;
 using BLL.BusinessLogic;
 using BLL.Interfaces;
-using CustomIdentityApp.Models;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestMVC.Models;
 
 namespace TestMVC
 {

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BLL.DTO
 {
-    class BasketCache
+    public class BasketCache
     {
         public List<int> ProductsId { get; set; }
     }

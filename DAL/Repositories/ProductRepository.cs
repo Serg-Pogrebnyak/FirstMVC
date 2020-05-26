@@ -1,53 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DAL.EF;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.EF;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace DAL.Repositories
 {
-    class ProductRepository : IRepository<Product>
+    public class ProductRepository : IRepository<Product>
     {
-
         private DBContext db;
 
         public ProductRepository(DBContext context)
         {
-            db = context;
+            this.db = context;
         }
 
         public IEnumerable<Product> GetAll()
         {
-            return db.Products;
+            return this.db.Products;
         }
 
         public Product Get(int id)
         {
-            return db.Products.Find(id);
+            return this.db.Products.Find(id);
         }
 
         public void Create(Product item)
         {
-            db.Products.Add(item);
+            this.db.Products.Add(item);
         }
 
         public void Update(Product item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            this.db.Entry(item).State = EntityState.Modified;
         }
 
         public IEnumerable<Product> Find(Func<Product, bool> predicate)
         {
-            return db.Products.Where(predicate).ToList();
+            return this.db.Products.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Product product = db.Products.Find(id);
+            Product product = this.db.Products.Find(id);
             if (product != null)
-                db.Products.Remove(product);
+            {
+                this.db.Products.Remove(product);
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using BLL.DTO;
 
 namespace BLL.Interfaces
@@ -9,17 +7,20 @@ namespace BLL.Interfaces
     {
         public enum SortByEnum : ushort
         {
-            priceToUp = 0,
-            priceDoDown = 1,
-            byName = 2,
-            byNameDescending = 3
+            PriceToUp = 0,
+            PriceDoDown = 1,
+            ByName = 2,
+            ByNameDescending = 3
         }
-        public IEnumerable<CategoriesDTO> getAllCategory();
-        public void createNewCategory(String Name);
 
-        public IEnumerable<ProductDTO> getAllProductInCategory(int id);
-        public IEnumerable<ProductDTO> selectProduct(int id, int priceFrom, int priceTo, SortByEnum by);
+        public IEnumerable<CategoriesDTO> GetAllCategory();
 
-        public bool containCategoryWithName(String name);
+        public void CreateNewCategory(string name);
+
+        public IEnumerable<ProductDTO> GetAllProductInCategory(int id);
+
+        public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by);
+
+        public bool ContainCategoryWithName(string name);
     }
 }

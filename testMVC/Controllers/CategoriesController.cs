@@ -21,7 +21,7 @@ namespace TestMVC.Controllers
         public IActionResult Index()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.getAllCategory());
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
 
             return this.View(categoryList);
         }
@@ -34,7 +34,7 @@ namespace TestMVC.Controllers
         [HttpPost]
         public IActionResult Create(string name)
         {
-            this.categoryService.createNewCategory(name);
+            this.categoryService.CreateNewCategory(name);
             return this.RedirectToAction("Index");
         }
     }

@@ -1,70 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using DAL.Interfaces;
 using DAL.Entities;
-using System.Linq;
+using DAL.Interfaces;
 using static BLL.Interfaces.ICategoryService;
-using AutoMapper;
 
 namespace BLL.BusinessLogic
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IUnitOfWork _dataLayer;
+        private readonly IUnitOfWork dataLayer;
+
         public CategoryService(IUnitOfWork dataLayer)
         {
-            _dataLayer = dataLayer;
+            this.dataLayer = dataLayer;
         }
 
-        public void createNewCategory(string name)
+        public void CreateNewCategory(string name)
         {
             Categories category = new Categories
             {
                 Name = name
             };
-            _dataLayer.Categories.Create(category);
-            _dataLayer.Save();
+            this.dataLayer.Categories.Create(category);
+            this.dataLayer.Save();
         }
 
-        public IEnumerable<CategoriesDTO> getAllCategory()
+        public IEnumerable<CategoriesDTO> GetAllCategory()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
-            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(_dataLayer.Categories.GetAll());
+            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.dataLayer.Categories.GetAll());
             return categoryDTOList;
         }
 
-        public IEnumerable<ProductDTO> getAllProductInCategory(int id)
+        public IEnumerable<ProductDTO> GetAllProductInCategory(int id)
         {
-            Categories category = _dataLayer.Categories.Get(id);
-            return productMapper(category);
+            Categories category = this.dataLayer.Categories.Get(id);
+            return this.ProductMapper(category);
         }
 
-        public IEnumerable<ProductDTO> selectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
+        public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
         {
             List<ProductDTO> productDTOList;
             if (id != 0)
             {
-                Categories category = _dataLayer.Categories.Get(id);
-                productDTOList = productMapper(category).ToList();
-            } else
+                Categories category = this.dataLayer.Categories.Get(id);
+                productDTOList = this.ProductMapper(category).ToList();
+            }
+            else
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>()).CreateMapper();
-                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(_dataLayer.Product.GetAll());
+                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.dataLayer.Product.GetAll());
             }
 
-            return selectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
+            return this.SelectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
         }
 
-        public bool containCategoryWithName(String name)
+        public bool ContainCategoryWithName(string name)
         {
-            Categories category = _dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
+            Categories category = this.dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;
         }
 
-        private IEnumerable<ProductDTO> productMapper(Categories categories)
+        private IEnumerable<ProductDTO> ProductMapper(Categories categories)
         {
             List<ProductDTO> productDTOList = new List<ProductDTO> { };
             foreach (Product product in categories.Products)
@@ -78,10 +78,11 @@ namespace BLL.BusinessLogic
                 };
                 productDTOList.Add(productDTO);
             }
+
             return productDTOList;
         }
-        
-        private IEnumerable<ProductDTO> selectAndSortByCriteria(List<ProductDTO> productDTOList, int priceFrom, int priceTo, SortByEnum by)
+
+        private IEnumerable<ProductDTO> SelectAndSortByCriteria(List<ProductDTO> productDTOList, int priceFrom, int priceTo, SortByEnum by)
         {
             if (priceTo > priceFrom)
             {
@@ -90,18 +91,20 @@ namespace BLL.BusinessLogic
             else
             {
                 productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
-            };
+            }
+
             switch (by)
             {
-                case SortByEnum.priceToUp:
+                case SortByEnum.PriceToUp:
                     return productDTOList.OrderBy(productDTO => productDTO.Price);
-                case SortByEnum.priceDoDown:
+                case SortByEnum.PriceDoDown:
                     return productDTOList.OrderByDescending(productDTO => productDTO.Price);
-                case SortByEnum.byName:
+                case SortByEnum.ByName:
                     return productDTOList.OrderBy(productDTO => productDTO.Name);
-                case SortByEnum.byNameDescending:
+                case SortByEnum.ByNameDescending:
                     return productDTOList.OrderByDescending(productDTO => productDTO.Name);
             }
+
             return productDTOList;
         }
     }

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using BLL.DTO;
 
 namespace BLL.Interfaces
 {
     public interface IOrderService
     {
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(String userId = null, String basketInCache = null);
-        public int GetOrderTotalAmount(String userId = null, String basketInCache = null);
-        public String addProductInBasket(int productId, String userId = null, String basketInCache = null);
-        public String deleteProductFromBasket(int productId, String userId = null, String basketInCache = null);
-        public void migrateBasketFromCookie(String userId, String basketInCache);
+        public IEnumerable<ProductDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null);
+
+        public int GetOrderTotalAmount(string userId = null, string basketInCache = null);
+
+        public string AddProductInBasket(int productId, string userId = null, string basketInCache = null);
+
+        public string DeleteProductFromBasket(int productId, string userId = null, string basketInCache = null);
+
+        public void MigrateBasketFromCookie(string userId, string basketInCache);
     }
 }

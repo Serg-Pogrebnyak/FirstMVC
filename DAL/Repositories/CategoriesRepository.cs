@@ -1,55 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DAL.EF;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.EF;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace DAL.Repositories
 {
-    class CategoriesRepository : IRepository<Categories>
+    public class CategoriesRepository : IRepository<Categories>
     {
-
         private DBContext db;
 
         public CategoriesRepository(DBContext context)
         {
-            db = context;
+            this.db = context;
         }
 
         public IEnumerable<Categories> GetAll()
         {
-            return db.Categories;
+            return this.db.Categories;
         }
 
         public Categories Get(int id)
         {
-            Categories category = db.Categories.Find(id);
-            db.Entry(category).Collection(c => c.Products).Load();
+            Categories category = this.db.Categories.Find(id);
+            this.db.Entry(category).Collection(c => c.Products).Load();
             return category;
         }
 
         public void Create(Categories item)
         {
-            db.Categories.Add(item);
+            this.db.Categories.Add(item);
         }
 
         public void Update(Categories item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            this.db.Entry(item).State = EntityState.Modified;
         }
 
         public IEnumerable<Categories> Find(Func<Categories, bool> predicate)
         {
-            return db.Categories.Where(predicate).ToList();
+            return this.db.Categories.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Categories category = db.Categories.Find(id);
+            Categories category = this.db.Categories.Find(id);
             if (category != null)
-                db.Categories.Remove(category);
+            {
+                _ = this.db.Categories.Remove(category);
+            }
         }
     }
 }
