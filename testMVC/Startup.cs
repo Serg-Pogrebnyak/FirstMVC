@@ -1,4 +1,6 @@
 using System;
+using BLL.BusinessLogic;
+using BLL.Interfaces;
 using CustomIdentityApp.Models;
 using DAL.Interfaces;
 using DAL.Repositories;
@@ -9,17 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using BLL.Interfaces;
-using BLL.BusinessLogic;
 
-namespace testMVC
+namespace TestMVC
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -27,21 +26,21 @@ namespace testMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //bll and dal
+            // bll and dal
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient< IUnitOfWork, EFUnitOfWork >();
-            //db
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            // db
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //identity
+                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
+            // identity
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-            //session
+            // session
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -52,10 +51,9 @@ namespace testMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSession();
-            var logger = loggerFactory.CreateLogger("Startup");
 
             if (env.IsDevelopment())
             {
@@ -67,6 +65,7 @@ namespace testMVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

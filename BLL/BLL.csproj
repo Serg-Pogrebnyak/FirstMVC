@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CodeAnalysisRuleSet>../StyleCop/Nix.StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Nix.StyleCop.Analyzers" Version="1.0.19" />
+    <AdditionalFiles Include="..\StyleCop\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,8 @@
+﻿{
+  "$schema": "stylecop.schema.json",
+  "settings": {
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    }
+  }
+}

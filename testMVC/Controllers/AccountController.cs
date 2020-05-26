@@ -1,71 +1,73 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using CustomIdentityApp.ViewModels;
-using CustomIdentityApp.Models;
-using Microsoft.AspNetCore.Identity;
-using EmailApp;
-using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using BLL.Interfaces;
-using System.Linq;
+using CustomIdentityApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using TestMVC.ViewModels;
 
 namespace CustomIdentityApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IOrderService _orderService;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        private readonly IOrderService orderService;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrderService orderService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _orderService = orderService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.orderService = orderService;
         }
+
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return this.View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 User user = new User { Email = model.Email, UserName = model.Email, Name = model.Name, SurName = model.SurName };
-                // добавляем пользователя
-                var result = await _userManager.CreateAsync(user, model.Password);
+                // add user
+                var result = await this.userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    //confirm email service
+                    // confirm email service
                     // генерация токена для пользователя
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action(
+                    // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    // var callbackUrl = Url.Action(
                     //    "ConfirmEmail",
                     //    "Account",
                     //    new { userId = user.Id, code = code },
                     //    protocol: HttpContext.Request.Scheme);
-                    //EmailService emailService = new EmailService();
-                    //await emailService.SendEmailAsync(model.Email, "Confirm your account",
-                    //    $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-                    //return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-                    
-                    migrateBasketFromCookieToDB(user.Id);
+                    // EmailService emailService = new EmailService();
+                    // await emailService.SendEmailAsync(model.Email, "Confirm your account",
+                    // $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+                    // return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+
+                    this.MigrateBasketFromCookieToDB(user.Id);
 
                     // установка куки
-                    await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    await this.signInManager.SignInAsync(user, false);
+                    return this.RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        this.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
             }
-            return View(model);
+
+            return this.View(model);
         }
 
         [HttpGet]
@@ -74,82 +76,87 @@ namespace CustomIdentityApp.Controllers
         {
             if (userId == null || code == null)
             {
-                return View("Error");
+                return this.View("Error");
             }
-            var user = await _userManager.FindByIdAsync(userId);
+
+            var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View("Error");
+                return this.View("Error");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            var result = await this.userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
             else
-                return View("Error");
+            {
+                return this.View("Error");
+            }
         }
 
-        //Login
+        // Login
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            return this.View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                
-                var user = await _userManager.FindByNameAsync(model.Email);
+                var user = await this.userManager.FindByNameAsync(model.Email);
                 var result =
-                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                    await this.signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    migrateBasketFromCookieToDB(user.Id);
+                    this.MigrateBasketFromCookieToDB(user.Id);
 
-                    //check confirmed email
-                    //if (!user.EmailConfirmed)
-                    //{
+                    // check confirmed email
+                    // if (!user.EmailConfirmed)
+                    // {
                     //    await _signInManager.SignOutAsync();
                     //    ModelState.AddModelError("", "Email not confirmed");
                     //    return View(model);
-                    //}
+                    // }
 
                     // проверяем, принадлежит ли URL приложению
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && this.Url.IsLocalUrl(model.ReturnUrl))
                     {
-                        return Redirect(model.ReturnUrl);
+                        return this.Redirect(model.ReturnUrl);
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return this.RedirectToAction("Index", "Home");
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    this.ModelState.AddModelError(string.Empty, "Неправильный логин и (или) пароль");
                 }
             }
-            return View(model);
+
+            return this.View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             // удаляем аутентификационные куки
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            await this.signInManager.SignOutAsync();
+            return this.RedirectToAction("Index", "Home");
         }
 
-        private void migrateBasketFromCookieToDB(string userId)
+        private void MigrateBasketFromCookieToDB(string userId)
         {
-            if (HttpContext.Session.Keys.Contains("basket"))
+            if (this.HttpContext.Session.Keys.Contains("basket"))
             {
-                _orderService.migrateBasketFromCookie(userId, HttpContext.Session.GetString("basket"));
-                HttpContext.Session.Remove("basket");
+                this.orderService.migrateBasketFromCookie(userId, this.HttpContext.Session.GetString("basket"));
+                this.HttpContext.Session.Remove("basket");
             }
         }
     }

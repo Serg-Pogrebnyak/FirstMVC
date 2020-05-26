@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using testMVC.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace testMVC.ViewModels
+namespace TestMVC.ViewModels
 {
     public class ProductViewModel
     {
         [Required]
         [Display(Name = "Имя")]
         public string Name { get; set; }
-        
+
         [Required]
         [Display(Name = "Цена")]
         public int Price { get; set; }
@@ -22,6 +17,6 @@ namespace testMVC.ViewModels
 
         [Required]
         [Display(Name = "В какую категорию добавить:")]
-        public String Category { get; set; }
+        public string Category { get; set; }
     }
 }

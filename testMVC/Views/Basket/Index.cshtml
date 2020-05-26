@@ -1,4 +1,4 @@
-﻿@model IEnumerable<testMVC.ViewModels.ProductInBasketViewModel>
+﻿@model IEnumerable<TestMVC.ViewModels.ProductInBasketViewModel>
 <h3> Ваша корзина </h3>
 <table class="table">
     <tr>
@@ -11,7 +11,7 @@
             <td> @product.Name</td>
             <td> @product.Price</td>
             <td>
-                <form method="post" asp-controller="Basket" asp-action="delete">
+                <form method="post" asp-controller="Basket" asp-action="Delete">
                     <input type="hidden" name="productId" value=@product.Id />
                     <input class="btn btn-danger" type="submit" value="Удалить из корзины" />
                 </form>

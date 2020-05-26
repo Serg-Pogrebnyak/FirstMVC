@@ -1,9 +1,9 @@
-﻿using MimeKit;
+﻿using System.Threading.Tasks;
 using MailKit.Net.Smtp;
-using System.Threading.Tasks;
 using MailKit.Security;
+using MimeKit;
 
-namespace EmailApp
+namespace TestMVC.Models
 {
     public class EmailService
     {
@@ -12,7 +12,7 @@ namespace EmailApp
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("Администрация сайта", "email"));
-            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.To.Add(new MailboxAddress(string.Empty, email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
@@ -21,9 +21,9 @@ namespace EmailApp
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
-                client.Authenticate("email", "password");
-                client.Send(emailMessage);
+                await client.ConnectAsync("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
+                await client.AuthenticateAsync("email", "password");
+                await client.SendAsync(emailMessage);
 
                 await client.DisconnectAsync(true);
             }

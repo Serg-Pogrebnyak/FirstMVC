@@ -1,33 +1,33 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
+using BLL.DTO;
+using BLL.Interfaces;
+using CustomIdentityApp.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using testMVC.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using CustomIdentityApp.Models;
-using BLL.Interfaces;
-using BLL.DTO;
-using AutoMapper;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
+using TestMVC.ViewModels;
 using static BLL.Interfaces.ICategoryService;
 
-namespace testMVC.Controllers
+namespace TestMVC.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly ILogger _logger;
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
-        private readonly IOrderService _orderService;
+        private readonly UserManager<User> userManager;
+        private readonly ILogger logger;
+        private readonly IProductService productService;
+        private readonly ICategoryService categoryService;
+        private readonly IOrderService orderService;
 
         public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IProductService productService, ICategoryService categoryService)
         {
-            _userManager = userManager;
-            _logger = logger;
-            _productService = productService;
-            _categoryService = categoryService;
-            _orderService = orderService;
+            this.userManager = userManager;
+            this.logger = logger;
+            this.productService = productService;
+            this.categoryService = categoryService;
+            this.orderService = orderService;
         }
 
         [HttpGet]
@@ -36,9 +36,9 @@ namespace testMVC.Controllers
         public IActionResult Index()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_productService.getAllProduct());
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.productService.getAllProduct());
 
-            return View(productList);
+            return this.View(productList);
         }
 
         [HttpGet]
@@ -46,37 +46,37 @@ namespace testMVC.Controllers
         public IActionResult Index(int id)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_categoryService.getAllProductInCategory(id));
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.getAllProductInCategory(id));
 
-            return View(productList);
+            return this.View(productList);
         }
 
         [HttpPost]
-        public IActionResult Index(int id, int PriceFrom, int PriceTo, int sort)
+        public IActionResult Index(int id, int priceFrom, int priceTo, int sort)
         {
             SortByEnum by = (SortByEnum)sort;
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(_categoryService.selectProduct(id, PriceFrom, PriceTo, by));
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.selectProduct(id, priceFrom, priceTo, by));
 
-            return View(productList);
+            return this.View(productList);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(_categoryService.getAllCategory());
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.getAllCategory());
 
-            ViewBag.Categories = categoryList;
-            return View();
+            this.ViewBag.Categories = categoryList;
+            return this.View();
         }
 
         [HttpPost]
         public IActionResult Create(ProductViewModel newProduct)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                if (_categoryService.containCategoryWithName(newProduct.Category))
+                if (this.categoryService.containCategoryWithName(newProduct.Category))
                 {
                     ProductDTO productDTO = new ProductDTO
                         {
@@ -84,37 +84,41 @@ namespace testMVC.Controllers
                             Price = newProduct.Price,
                             Description = newProduct.Description
                         };
-                    _productService.createNewProduct(productDTO, newProduct.Category);
-                } else
-                {
-                    ModelState.AddModelError("", "Error in cloud - Selected category not found");
-                    ViewBag.Categories = _categoryService.getAllCategory();
-                    return View();
+                    this.productService.createNewProduct(productDTO, newProduct.Category);
                 }
-                return RedirectToAction("Index");
-            } else
+                else
+                {
+                    this.ModelState.AddModelError(string.Empty, "Error in cloud - Selected category not found");
+                    this.ViewBag.Categories = this.categoryService.getAllCategory();
+                    return this.View();
+                }
+
+                return this.RedirectToAction("Index");
+            }
+            else
             {
-                ViewBag.Categories = _categoryService.getAllCategory();
-                return View();
-                
+                this.ViewBag.Categories = this.categoryService.getAllCategory();
+                return this.View();
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Buy(int productId)
         {
-            User user = await GetCurrentUserAsync();
+            User user = await this.GetCurrentUserAsync();
             if (user != null)
             {
-                _orderService.addProductInBasket(productId, userId: user.Id);
-            } else
-            {
-                string basketCockie = _orderService.addProductInBasket(productId, basketInCache: HttpContext.Session.GetString("basket"));
-                HttpContext.Session.SetString("basket", basketCockie);
+                this.orderService.addProductInBasket(productId, userId: user.Id);
             }
-            
-            return Redirect(Request.Headers["Referer"].ToString());
+            else
+            {
+                string basketCockie = this.orderService.addProductInBasket(productId, basketInCache: this.HttpContext.Session.GetString("basket"));
+                this.HttpContext.Session.SetString("basket", basketCockie);
+            }
+
+            return this.Redirect(this.Request.Headers["Referer"].ToString());
         }
-        private async Task<User> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
+
+        private async Task<User> GetCurrentUserAsync() => await this.userManager.GetUserAsync(this.HttpContext.User);
     }
 }

@@ -1,35 +1,35 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 using CustomIdentityApp.Models;
-using System.Collections.Generic;
-using testMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using TestMVC.ViewModels;
 
-namespace testMVC.Controllers
+namespace TestMVC.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        UserManager<User> _userManager;
-        RoleManager<IdentityRole> _roleManager;
-        SignInManager<User> _signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<User> signInManager;
 
         public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<UserRoleViewModel> userList = new List<UserRoleViewModel>();
-            foreach (var user in _userManager.Users.ToList())
+            foreach (var user in this.userManager.Users.ToList())
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
+                var userRoles = await this.userManager.GetRolesAsync(user);
                 UserRoleViewModel viewModel = new UserRoleViewModel
                 {
                     UserRoles = userRoles,
@@ -43,36 +43,37 @@ namespace testMVC.Controllers
 
             ChangeUserRoleViewModel changeUserRole = new ChangeUserRoleViewModel
             {
-                AllRoles = _roleManager.Roles.ToList(),
+                AllRoles = this.roleManager.Roles.ToList(),
                 Users = userList
             };
-            return View(changeUserRole);
+            return this.View(changeUserRole);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeUserRole(string role, string userEmail, bool addOrRemove)//add - true, remove - false
+        public async Task<IActionResult> ChangeUserRole(string role, string userEmail, bool addOrRemove) // add - true, remove - false
         {
-            User user = await _userManager.FindByEmailAsync(userEmail);
+            User user = await this.userManager.FindByEmailAsync(userEmail);
             string[] arrayOfRole = new string[] { role };
             if (addOrRemove)
             {
-                await _userManager.AddToRolesAsync(user, arrayOfRole);
-            } else
+                await this.userManager.AddToRolesAsync(user, arrayOfRole);
+            }
+            else
             {
-                await _userManager.RemoveFromRolesAsync(user, arrayOfRole);
-            }   
+                await this.userManager.RemoveFromRolesAsync(user, arrayOfRole);
+            }
 
-            await _signInManager.RefreshSignInAsync(user);
-            return RedirectToAction("Index");
+            await this.signInManager.RefreshSignInAsync(user);
+            return this.RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(string userEmail)//add - true, remove - false
+        public async Task<IActionResult> DeleteUser(string userEmail) // add - true, remove - false
         {
-            User user = await _userManager.FindByEmailAsync(userEmail);
-            await _userManager.DeleteAsync(user);
+            User user = await this.userManager.FindByEmailAsync(userEmail);
+            await this.userManager.DeleteAsync(user);
 
-            return RedirectToAction("Index");
+            return this.RedirectToAction("Index");
         }
     }
 }

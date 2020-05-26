@@ -3,54 +3,55 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using testMVC.ViewModels;
+using TestMVC.ViewModels;
 
-namespace testMVC.Controllers
+namespace TestMVC.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
-        RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public RoleController(RoleManager<IdentityRole> roleManager)
         {
-            _roleManager = roleManager;
+            this.roleManager = roleManager;
         }
-        [HttpGet]
-        public IActionResult Index() => View(_roleManager.Roles.ToList());
 
         [HttpGet]
-        public IActionResult Create() => View();
+        public IActionResult Index() => this.View(this.roleManager.Roles.ToList());
+
+        [HttpGet]
+        public IActionResult Create() => this.View();
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(RoleViewModel model) 
+        public async Task<IActionResult> CreateAsync(RoleViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(model.Name));
+                IdentityResult result = await this.roleManager.CreateAsync(new IdentityRole(model.Name));
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Role");
+                    return this.RedirectToAction("Index", "Role");
                 }
                 else
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        this.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
             }
-            
-            return View();
+
+            return this.View();
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteRole(string role)
         {
-            IdentityRole roleForDelete = await _roleManager.FindByNameAsync(role);
-            await _roleManager.DeleteAsync(roleForDelete);
+            IdentityRole roleForDelete = await this.roleManager.FindByNameAsync(role);
+            await this.roleManager.DeleteAsync(roleForDelete);
 
-            return RedirectToAction("Index");
+            return this.RedirectToAction("Index");
         }
     }
 }

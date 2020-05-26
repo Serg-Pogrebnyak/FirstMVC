@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CustomIdentityApp.ViewModels
+namespace TestMVC.ViewModels
 {
     public class RegisterViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace testMVC.ViewModels
+namespace TestMVC.ViewModels
 {
     public class RoleViewModel
     {
