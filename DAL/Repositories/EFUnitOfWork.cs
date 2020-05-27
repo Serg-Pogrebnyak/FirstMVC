@@ -1,58 +1,29 @@
 ﻿using System;
 using DAL.EF;
-using DAL.Entities;
 using DAL.Interfaces;
 
 namespace DAL.Repositories
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class EFUnitOfWork<T> : IUnitOfWork<T> where T : class
     {
         private DBContext db;
-        private BasketRepository basketRepository;
-        private CategoriesRepository categoriesRepository;
-        private ProductRepository productRepository;
+        private Repository<T> repository;
 
         public EFUnitOfWork()
         {
             this.db = new DBContext();
         }
 
-        public IRepositoryBasket<Basket> Basket
+        public IRepository<T> Repository
         {
             get
             {
-                if (this.basketRepository == null)
+                if (this.repository == null)
                 {
-                    this.basketRepository = new BasketRepository(this.db);
+                    this.repository = new Repository<T>(this.db);
                 }
 
-                return this.basketRepository;
-            }
-        }
-
-        public IRepository<Categories> Categories
-        {
-            get
-            {
-                if (this.categoriesRepository == null)
-                {
-                    this.categoriesRepository = new CategoriesRepository(this.db);
-                }
-
-                return this.categoriesRepository;
-            }
-        }
-
-        public IRepository<Product> Product
-        {
-            get
-            {
-                if (this.productRepository == null)
-                {
-                    this.productRepository = new ProductRepository(this.db);
-                }
-
-                return this.productRepository;
+                return this.repository;
             }
         }
 

@@ -11,11 +11,13 @@ namespace BLL.BusinessLogic
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IUnitOfWork dataLayer;
+        private readonly IUnitOfWork<Categories> db;
+        private readonly IUnitOfWork<Product> productDb;
 
-        public CategoryService(IUnitOfWork dataLayer)
+        public CategoryService(IUnitOfWork<Categories> db, IUnitOfWork<Product> productDb)
         {
-            this.dataLayer = dataLayer;
+            this.db = db;
+            this.productDb = productDb;
         }
 
         public void CreateNewCategory(string name)
@@ -24,20 +26,20 @@ namespace BLL.BusinessLogic
             {
                 Name = name
             };
-            this.dataLayer.Categories.Create(category);
-            this.dataLayer.Save();
+            this.db.Repository.Create(category);
+            this.db.Save();
         }
 
         public IEnumerable<CategoriesDTO> GetAllCategory()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
-            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.dataLayer.Categories.GetAll());
+            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetAll());
             return categoryDTOList;
         }
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(int id)
         {
-            Categories category = this.dataLayer.Categories.Get(id);
+            Categories category = this.db.Repository.Get(id);
             return this.ProductMapper(category);
         }
 
@@ -46,13 +48,13 @@ namespace BLL.BusinessLogic
             List<ProductDTO> productDTOList;
             if (id != 0)
             {
-                Categories category = this.dataLayer.Categories.Get(id);
+                Categories category = this.db.Repository.Get(id);
                 productDTOList = this.ProductMapper(category).ToList();
             }
             else
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>()).CreateMapper();
-                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.dataLayer.Product.GetAll());
+                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.productDb.Repository.GetAll());
             }
 
             return this.SelectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
@@ -60,7 +62,7 @@ namespace BLL.BusinessLogic
 
         public bool ContainCategoryWithName(string name)
         {
-            Categories category = this.dataLayer.Categories.GetAll().SingleOrDefault(cat => cat.Name == name);
+            Categories category = this.db.Repository.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;
         }
 

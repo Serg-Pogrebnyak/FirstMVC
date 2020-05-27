@@ -1,15 +1,10 @@
 ﻿using System;
-using DAL.Entities;
 
 namespace DAL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork<T> : IDisposable where T : class
     {
-        IRepositoryBasket<Basket> Basket { get; }
-
-        IRepository<Categories> Categories { get; }
-
-        IRepository<Product> Product { get; }
+        IRepository<T> Repository { get; }
 
         void Save();
     }

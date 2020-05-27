@@ -12,6 +12,6 @@
 
         public int? CategoriesId { get; set; }
 
-        public Categories Category { get; set; }
+        public virtual Categories Category { get; set; }
     }
 }

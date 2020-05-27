@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -9,11 +10,13 @@ namespace BLL.BusinessLogic
 {
     public class OrderService : IOrderService
     {
-        private readonly IUnitOfWork db;
+        private readonly IUnitOfWork<Basket> db;
+        private readonly IUnitOfWork<Product> productDb;
 
-        public OrderService(IUnitOfWork db)
+        public OrderService(IUnitOfWork<Basket> db, IUnitOfWork<Product> productDb)
         {
             this.db = db;
+            this.productDb = productDb;
         }
 
         public string AddProductInBasket(int productId, string userId = null, string basketInCache = null)
@@ -33,7 +36,7 @@ namespace BLL.BusinessLogic
         {
             if (userId != null)
             {
-                Basket basket = this.db.Basket.GetByUserId(userId);
+                Basket basket = this.GetBasketByUserId(userId);
                 if (basket == null)
                 {
                     return new List<ProductDTO> { };
@@ -52,7 +55,7 @@ namespace BLL.BusinessLogic
         {
             if (userId != null)
             {
-                Basket basket = this.db.Basket.GetByUserId(userId);
+                Basket basket = this.GetBasketByUserId(userId);
                 if (basket == null)
                 {
                     return 0;
@@ -71,12 +74,12 @@ namespace BLL.BusinessLogic
         {
             if (userId != null)
             {
-                Basket basket = this.db.Basket.GetByUserId(userId);
+                Basket basket = this.GetBasketByUserId(userId);
                 var productsList = basket.ProductsId;
                 productsList.Remove(productId);
                 if (productsList.Count == 0)
                 {
-                    this.db.Basket.Delete(basket.Id);
+                    this.db.Repository.Delete(basket.Id);
                 }
                 else
                 {
@@ -109,7 +112,7 @@ namespace BLL.BusinessLogic
             List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
             foreach (int id in productIdArray)
             {
-                Product product = this.db.Product.Get(id);
+                Product product = this.productDb.Repository.Get(id);
                 ProductDTO productDTO = new ProductDTO
                 {
                     Id = product.Id,
@@ -128,7 +131,7 @@ namespace BLL.BusinessLogic
             int totalAmount = 0;
             foreach (int id in productIdArray)
             {
-                totalAmount += this.db.Product.Get(id).Price;
+                totalAmount += this.productDb.Repository.Get(id).Price;
             }
 
             return totalAmount;
@@ -137,7 +140,7 @@ namespace BLL.BusinessLogic
         // add product in local basket or cache
         private void AddProductInDBBasket(string userId, int productId)
         {
-            Basket basket = this.db.Basket.GetByUserId(userId);
+            Basket basket = this.GetBasketByUserId(userId);
             if (basket == null)
             {
                 Basket newBasket = new Basket
@@ -145,7 +148,7 @@ namespace BLL.BusinessLogic
                     UserId = userId.ToString(),
                     ProductsId = new List<int>() { productId }
                 };
-                this.db.Basket.Create(newBasket);
+                this.db.Repository.Create(newBasket);
             }
             else
             {
@@ -174,6 +177,11 @@ namespace BLL.BusinessLogic
             }
 
             return JsonSerializer.Serialize<BasketCache>(basketCache);
+        }
+
+        private Basket GetBasketByUserId(string userId)
+        {
+            return this.db.Repository.GetAll().SingleOrDefault(basket => basket.UserId == userId);
         }
     }
 }
