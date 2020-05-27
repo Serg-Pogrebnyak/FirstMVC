@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TestMVC.Extensions;
 using TestMVC.Models;
 using TestMVC.ViewModels;
 
@@ -153,10 +154,10 @@ namespace CustomIdentityApp.Controllers
 
         private void MigrateBasketFromCookieToDB(string userId)
         {
-            if (this.HttpContext.Session.Keys.Contains("basket"))
+            if (this.HttpContext.IsContainBasket())
             {
-                this.orderService.MigrateBasketFromCookie(userId, this.HttpContext.Session.GetString("basket"));
-                this.HttpContext.Session.Remove("basket");
+                this.orderService.MigrateBasketFromCookie(userId, this.HttpContext.GetBasket());
+                this.HttpContext.RemoveBasketFromSession();
             }
         }
     }

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TestMVC.Extensions;
 using TestMVC.Models;
 using TestMVC.ViewModels;
 
@@ -37,9 +35,9 @@ namespace TestMVC.Controllers
                 orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(userId: user.Id));
                 return this.View(orderList);
             }
-            else if (this.HttpContext.Session.Keys.Contains("basket"))
+            else if (this.HttpContext.IsContainBasket())
             {
-                string cocieBasket = this.HttpContext.Session.GetString("basket");
+                string cocieBasket = this.HttpContext.GetBasket();
                 this.ViewBag.TotalAmount = this.orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
                 orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
                 return this.View(orderList);
@@ -57,11 +55,11 @@ namespace TestMVC.Controllers
             {
                 this.orderService.DeleteProductFromBasket(productId, userId: user.Id);
             }
-            else if (this.HttpContext.Session.Keys.Contains("basket"))
+            else if (this.HttpContext.IsContainBasket())
             {
-                string cocieBasket = this.HttpContext.Session.GetString("basket");
+                string cocieBasket = this.HttpContext.GetBasket();
                 string basketCockie = this.orderService.DeleteProductFromBasket(productId, basketInCache: cocieBasket);
-                this.HttpContext.Session.SetString("basket", basketCockie);
+                this.HttpContext.SetBasket(basketCockie);
             }
 
             return this.RedirectToAction("Index");

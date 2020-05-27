@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TestMVC.Extensions;
 using TestMVC.Models;
 using TestMVC.ViewModels;
 using static BLL.Interfaces.ICategoryService;
@@ -112,8 +112,8 @@ namespace TestMVC.Controllers
             }
             else
             {
-                string basketCockie = this.orderService.AddProductInBasket(productId, basketInCache: this.HttpContext.Session.GetString("basket"));
-                this.HttpContext.Session.SetString("basket", basketCockie);
+                string basketCockie = this.orderService.AddProductInBasket(productId, basketInCache: this.HttpContext.GetBasket());
+                this.HttpContext.SetBasket(basketCockie);
             }
 
             return this.Redirect(this.Request.Headers["Referer"].ToString());
