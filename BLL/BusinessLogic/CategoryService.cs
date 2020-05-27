@@ -37,9 +37,9 @@ namespace BLL.BusinessLogic
             return categoryDTOList;
         }
 
-        public IEnumerable<ProductDTO> GetAllProductInCategory(int id)
+        public IEnumerable<ProductDTO> GetAllProductInCategory(string tag)
         {
-            Categories category = this.db.Repository.Get(id);
+            Categories category = this.db.Repository.GetAll().SingleOrDefault(category => category.Tag == tag);
             return this.GetAllProducts(category).Distinct();
         }
 

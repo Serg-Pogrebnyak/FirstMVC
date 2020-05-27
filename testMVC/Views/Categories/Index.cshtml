@@ -7,7 +7,7 @@
     @foreach (var categories in Model)
     {
         <tr>
-            <td><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index" asp-route-id="@categories.Id" >@categories.Name</a></td>
+            <td><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index" asp-route-id="@categories.Tag" >@categories.Name</a></td>
         </tr>
     }
 

@@ -43,7 +43,7 @@ namespace TestMVC.Controllers
 
         [HttpGet]
         [Route("Products/Index/{id?}")]
-        public IActionResult Index(int id)
+        public IActionResult Index(string id)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
             var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.GetAllProductInCategory(id));

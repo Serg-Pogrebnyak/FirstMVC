@@ -6,7 +6,7 @@ namespace DAL.InitialData
     {
         internal static(Product[], Categories) GetPhoneProductsWithCategory()
         {
-            Categories category = new Categories { Id = 1, Name = "Телефон" };
+            Categories category = new Categories { Id = 1, Name = "Телефон", Tag = "phones" };
             Product p1 = new Product { Id = 1, Name = "iPhone SE 2020", Price = 14228, Description = "64GB", CategoriesId = category.Id };
             Product p2 = new Product { Id = 2, Name = "iPhone 11", Price = 19899, Description = "64GB", CategoriesId = category.Id };
             Product p3 = new Product { Id = 3, Name = "iPhone 11 Pro", Price = 27699, Description = "64GB", CategoriesId = category.Id };
@@ -33,7 +33,7 @@ namespace DAL.InitialData
 
         internal static(Product[], Categories) GetTabletProductsWithCategory()
         {
-            Categories category = new Categories { Id = 2, Name = "Планшет" };
+            Categories category = new Categories { Id = 2, Name = "Планшет", Tag = "tablets" };
 
             Product p1 = new Product { Id = 21, Name = "iPad Pro 11 (2019)", Price = 28895, Description = "Wi-Fi+Cellular 256GB", CategoriesId = category.Id };
             Product p2 = new Product { Id = 22, Name = "iPad Pro 11 (2020)", Price = 26517, Description = "Wi-Fi 128GB", CategoriesId = category.Id };
@@ -46,7 +46,7 @@ namespace DAL.InitialData
 
         internal static(Product[], Categories) GetMonitorProductsWithCategory()
         {
-            Categories category = new Categories { Id = 3, Name = "Монитор" };
+            Categories category = new Categories { Id = 3, Name = "Монитор", Tag = "monitors" };
 
             Product p1 = new Product { Id = 26, Name = "AOC 23.6", Price = 5299, Description = "144GH", CategoriesId = category.Id };
             Product p2 = new Product { Id = 27, Name = "Samsung Curved 27", Price = 4444, Description = "60GH", CategoriesId = category.Id };
