@@ -40,7 +40,7 @@ namespace BLL.BusinessLogic
         public IEnumerable<ProductDTO> GetAllProductInCategory(int id)
         {
             Categories category = this.db.Repository.Get(id);
-            return this.ProductMapper(category);
+            return this.GetAllProducts(category).Distinct();
         }
 
         public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
@@ -49,7 +49,7 @@ namespace BLL.BusinessLogic
             if (id != 0)
             {
                 Categories category = this.db.Repository.Get(id);
-                productDTOList = this.ProductMapper(category).ToList();
+                productDTOList = this.GetAllProducts(category).Distinct().ToList();
             }
             else
             {
@@ -64,6 +64,24 @@ namespace BLL.BusinessLogic
         {
             Categories category = this.db.Repository.GetAll().SingleOrDefault(cat => cat.Name == name);
             return category != null;
+        }
+
+        // private funcitons
+        private List<ProductDTO> GetAllProducts(Categories category, List<ProductDTO> products = null)
+        {
+            if (products == null)
+            {
+                products = new List<ProductDTO>();
+            }
+
+            products.AddRange(this.ProductMapper(category));
+
+            foreach (var child in category.ChildCategory)
+            {
+                this.GetAllProducts(child, products);
+            }
+
+            return products;
         }
 
         private IEnumerable<ProductDTO> ProductMapper(Categories categories)
