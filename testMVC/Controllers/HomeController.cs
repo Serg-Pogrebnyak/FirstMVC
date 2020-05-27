@@ -1,14 +1,29 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using AutoMapper;
+using BLL.DTO;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using TestMVC.Models;
+using TestMVC.ViewModels;
 
 namespace TestMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IProductService productService;
+
+        public HomeController(IProductService productService)
+        {
+            this.productService = productService;
+        }
+
         public IActionResult Index()
         {
-            return this.View();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.productService.GetAllProduct());
+
+            return this.View(productList);
         }
 
         public IActionResult Privacy()

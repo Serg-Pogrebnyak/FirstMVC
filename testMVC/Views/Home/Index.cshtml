@@ -1,17 +1,17 @@
-﻿@{
+﻿@model IEnumerable<TestMVC.ViewModels.ProductForDisplayViewModel>
+@{
     ViewData["Title"] = "Home Page";
 }
+<table class="table">
+    <tr>
+        <th>Товары</th>
+        <th colspan="2">Цена</th>
+    </tr>
+    @foreach (var product in Model)
+    {
+        <tr>
+            @await Html.PartialAsync("/Views/Products/_ProductPartialView.cshtml", product)
+        </tr>
+    }
 
-@if (User.Identity.IsAuthenticated)
-{
-    <p>@User.Identity.Name</p>
-
-    <form method="get" asp-controller="Account" asp-action="Logout">
-        <input type="submit" value="Выход" />
-    </form>
-}
-else
-{
-    <p><a asp-controller="Account" asp-action="Login">Вход</a></p>
-    <p><a asp-controller="Account" asp-action="Register">Регистрация</a></p>
-}
+</table>
