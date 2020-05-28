@@ -1,0 +1,17 @@
+﻿@model TestMVC.ViewModels.ProductForDisplayViewModel
+    <link rel="stylesheet" href="~/css/site.css" />
+<td>
+    <div class="card" style="width: 16rem; height: 22rem;">
+        <img class="card-img-top" src="...">
+        <div class="card-body">
+            <h5 class="card-title oneLines">@Model.Name</h5>
+            <p class="card-text threeLines">@Model.Description</p>
+            <div class="buyButton">
+                <form method="post" asp-controller="Products" asp-action="Buy">
+                    @Html.Hidden("productId", Model.Id)
+                    <button type="submit" class="btn btn-success">Buy</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</td>
