@@ -2,9 +2,9 @@
 
 namespace DAL.Interfaces
 {
-    public interface IUnitOfWork<T> : IDisposable where T : class
+    public interface IUnitOfWork : IDisposable
     {
-        IRepository<T> Repository { get; }
+        IRepository Repository { get; }
 
         void Save();
     }

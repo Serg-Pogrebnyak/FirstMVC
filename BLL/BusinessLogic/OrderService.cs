@@ -10,13 +10,11 @@ namespace BLL.BusinessLogic
 {
     public class OrderService : IOrderService
     {
-        private readonly IUnitOfWork<Basket> db;
-        private readonly IUnitOfWork<Product> productDb;
+        private readonly IUnitOfWork db;
 
-        public OrderService(IUnitOfWork<Basket> db, IUnitOfWork<Product> productDb)
+        public OrderService(IUnitOfWork db)
         {
             this.db = db;
-            this.productDb = productDb;
         }
 
         public string AddProductInBasket(int productId, string userId = null, string basketInCache = null)
@@ -79,7 +77,7 @@ namespace BLL.BusinessLogic
                 productsList.Remove(productId);
                 if (productsList.Count == 0)
                 {
-                    this.db.Repository.Delete(basket.Id);
+                    this.db.Repository.Delete<Basket>(basket.Id);
                 }
                 else
                 {
@@ -112,7 +110,7 @@ namespace BLL.BusinessLogic
             List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
             foreach (int id in productIdArray)
             {
-                Product product = this.productDb.Repository.Get(id);
+                Product product = this.db.Repository.Get<Product>(id);
                 ProductDTO productDTO = new ProductDTO
                 {
                     Id = product.Id,
@@ -131,7 +129,7 @@ namespace BLL.BusinessLogic
             int totalAmount = 0;
             foreach (int id in productIdArray)
             {
-                totalAmount += this.productDb.Repository.Get(id).Price;
+                totalAmount += this.db.Repository.Get<Product>(id).Price;
             }
 
             return totalAmount;
@@ -181,7 +179,7 @@ namespace BLL.BusinessLogic
 
         private Basket GetBasketByUserId(string userId)
         {
-            return this.db.Repository.GetAll().SingleOrDefault(basket => basket.UserId == userId);
+            return this.db.Repository.GetAll<Basket>().SingleOrDefault(basket => basket.UserId == userId);
         }
     }
 }

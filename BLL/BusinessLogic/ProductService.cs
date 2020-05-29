@@ -9,18 +9,16 @@ namespace BLL.BusinessLogic
 {
     public class ProductService : IProductService
     {
-        private readonly IUnitOfWork<Product> db;
-        private readonly IUnitOfWork<Categories> categoryDb;
+        private readonly IUnitOfWork db;
 
-        public ProductService(IUnitOfWork<Product> db, IUnitOfWork<Categories> categoryDb)
+        public ProductService(IUnitOfWork db)
         {
             this.db = db;
-            this.categoryDb = categoryDb;
         }
 
         public void CreateNewProduct(ProductDTO newProduct, string name)
         {
-            Categories category = this.categoryDb.Repository.GetAll().SingleOrDefault(cat => cat.Name == name);
+            Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(cat => cat.Name == name);
             Product product = new Product
             {
                 Name = newProduct.Name,
@@ -35,7 +33,7 @@ namespace BLL.BusinessLogic
         public IEnumerable<ProductDTO> GetAllProduct()
         {
             List<ProductDTO> productDTOList = new List<ProductDTO> { };
-            foreach (Product product in this.db.Repository.GetAll())
+            foreach (Product product in this.db.Repository.GetAll<Product>())
             {
                 ProductDTO productDTO = new ProductDTO
                 {

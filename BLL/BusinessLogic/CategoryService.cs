@@ -11,13 +11,11 @@ namespace BLL.BusinessLogic
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IUnitOfWork<Categories> db;
-        private readonly IUnitOfWork<Product> productDb;
+        private readonly IUnitOfWork db;
 
-        public CategoryService(IUnitOfWork<Categories> db, IUnitOfWork<Product> productDb)
+        public CategoryService(IUnitOfWork db)
         {
             this.db = db;
-            this.productDb = productDb;
         }
 
         public void CreateNewCategory(string name)
@@ -33,13 +31,13 @@ namespace BLL.BusinessLogic
         public IEnumerable<CategoriesDTO> GetAllCategory()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
-            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetAll());
+            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetAll<Categories>());
             return categoryDTOList;
         }
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag)
         {
-            Categories category = this.db.Repository.GetAll().SingleOrDefault(category => category.Tag == tag);
+            Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Tag == tag);
             return this.GetAllProducts(category).Distinct();
         }
 
@@ -48,13 +46,13 @@ namespace BLL.BusinessLogic
             List<ProductDTO> productDTOList;
             if (id != 0)
             {
-                Categories category = this.db.Repository.Get(id);
+                Categories category = this.db.Repository.Get<Categories>(id);
                 productDTOList = this.GetAllProducts(category).Distinct().ToList();
             }
             else
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>()).CreateMapper();
-                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.productDb.Repository.GetAll());
+                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.db.Repository.GetAll<Product>());
             }
 
             return this.SelectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
@@ -62,7 +60,7 @@ namespace BLL.BusinessLogic
 
         public bool ContainCategoryWithName(string name)
         {
-            Categories category = this.db.Repository.GetAll().SingleOrDefault(cat => cat.Name == name);
+            Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(cat => cat.Name == name);
             return category != null;
         }
 

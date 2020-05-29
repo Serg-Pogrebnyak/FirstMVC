@@ -30,7 +30,7 @@ namespace TestMVC
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient(typeof(IUnitOfWork<>), typeof(EFUnitOfWork<>));
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             // db
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));

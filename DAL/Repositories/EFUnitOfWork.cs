@@ -4,23 +4,23 @@ using DAL.Interfaces;
 
 namespace DAL.Repositories
 {
-    public class EFUnitOfWork<T> : IUnitOfWork<T> where T : class
+    public class EFUnitOfWork : IUnitOfWork
     {
         private DBContext db;
-        private Repository<T> repository;
+        private Repository repository;
 
         public EFUnitOfWork()
         {
             this.db = new DBContext();
         }
 
-        public IRepository<T> Repository
+        public IRepository Repository
         {
             get
             {
                 if (this.repository == null)
                 {
-                    this.repository = new Repository<T>(this.db);
+                    this.repository = new Repository(this.db);
                 }
 
                 return this.repository;
