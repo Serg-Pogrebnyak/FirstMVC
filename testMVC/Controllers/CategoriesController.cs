@@ -2,7 +2,6 @@
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestMVC.ViewModels;
 
@@ -26,11 +25,9 @@ namespace TestMVC.Controllers
             return this.View(categoryList);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create() => this.View();
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create(string name)
         {

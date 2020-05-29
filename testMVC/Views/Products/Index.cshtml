@@ -62,9 +62,8 @@
             }
 
         </table>
-        @if (this.User.IsInRole("Admin"))
-        {
+
             <form method="get" asp-controller="Products" asp-action="Create">
                 <input class="btn btn-success" type="submit" value="Создать" />
             </form>
-        }
+        
