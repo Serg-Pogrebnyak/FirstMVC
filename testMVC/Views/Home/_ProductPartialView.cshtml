@@ -1,7 +1,7 @@
 ﻿@model TestMVC.ViewModels.ProductForDisplayViewModel
     <link rel="stylesheet" href="~/css/site.css" />
     <div class="card" style="width: 16rem; height: 22rem;">
-        <img class="card-img-top" src="@Url.Content(@Model.ImageName)">
+        <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
         <div class="card-body">
             <h5 class="card-title oneLines">@Model.Name</h5>
             <p class="card-text threeLines">@Model.Description</p>

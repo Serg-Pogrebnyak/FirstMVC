@@ -24,7 +24,9 @@ namespace BLL.BusinessLogic
                 Name = newProduct.Name,
                 Price = newProduct.Price,
                 Description = newProduct.Description,
-                Category = category
+                Category = category,
+                LongDescription = newProduct.LongDescription,
+                ImageInByte = newProduct.ImageInByte
             };
             this.db.Repository.Create(product);
             this.db.Save();
@@ -41,7 +43,7 @@ namespace BLL.BusinessLogic
                     Name = product.Name,
                     Price = product.Price,
                     Description = product.Description,
-                    ImageName = product.ImageName,
+                    ImageInByte = product.ImageInByte,
                     LongDescription = product.LongDescription
                 };
                 productDTOList.Add(productDTO);

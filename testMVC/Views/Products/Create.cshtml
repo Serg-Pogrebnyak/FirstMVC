@@ -1,6 +1,6 @@
 ﻿@model TestMVC.ViewModels.ProductViewModel
 
-    <form method="Post" asp-controller="Products" asp-action="Create">
+    <form method="Post" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly"></div>
         <div>
             <label asp-for="Name"></label><br />
@@ -22,7 +22,7 @@
 
         <div>
             <label asp-for="Category"></label><br />
-                <select id="Category" name="Category">
+            <select id="Category" name="Category">
                 @foreach (var categories in ViewBag.Categories)
                 {
                     <option>
@@ -30,9 +30,15 @@
                     </option>
 
                 }
-                </select>
+            </select>
             <span asp-validation-for="Category"></span>
         </div>
-        
+
+        <div>
+            <label asp-for="File"></label><br />
+            <input type="file" class="form-control" asp-for="File" />
+            <span asp-validation-for="File"></span>
+        </div>
+
         <input class="btn btn-success" type="submit" value="Создать" />
     </form>

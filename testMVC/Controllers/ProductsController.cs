@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
@@ -84,6 +85,14 @@ namespace TestMVC.Controllers
                             Price = newProduct.Price,
                             Description = newProduct.Description
                         };
+                    byte[] imageData = null;
+                    // считываем переданный файл в массив байтов
+                    using (var binaryReader = new BinaryReader(newProduct.File.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)newProduct.File.Length);
+                    }
+
+                    productDTO.ImageInByte = imageData;
                     this.productService.CreateNewProduct(productDTO, newProduct.Category);
                 }
                 else
