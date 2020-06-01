@@ -11,6 +11,7 @@ namespace TestMVC.Controllers
 {
     public class CategoriesController : Controller
     {
+        private readonly int countOfElenetPerPage = 1;
         private readonly ICategoryService categoryService;
 
         public CategoriesController(ICategoryService categoryService)
@@ -19,12 +20,19 @@ namespace TestMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int page = 0)
         {
+            var paginationTuple = this.categoryService.GetElementsByPageAndCountOfPages(page, this.countOfElenetPerPage);
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+            CategoriesForDisplayViewModel[] categoryArray = mapper.Map<IEnumerable<CategoriesDTO>, CategoriesForDisplayViewModel[]>(paginationTuple.elements);
+            PaginationCategoryViewModel paginationModel = new PaginationCategoryViewModel
+            {
+                CurrentPage = page,
+                CategoryList = categoryArray,
+                HasNext = paginationTuple.countOfPages > (page + 1) // plus one because start calculating from zero
+            };
 
-            return this.View(categoryList);
+            return this.View(paginationModel);
         }
 
         [Authorize(Roles = "Admin")]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BLL.DTO;
@@ -63,6 +64,15 @@ namespace BLL.BusinessLogic
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
             var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetAll<Categories>());
             return categoryDTOList;
+        }
+
+        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage)
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
+            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetForPage<Categories>(byPage, elementPerPage));
+            double notRoundedPages = this.db.Repository.GetCount<Categories>() / elementPerPage;
+            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
+            return (categoryDTOList, pages);
         }
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag)

@@ -7,6 +7,10 @@ namespace DAL.Interfaces
     {
         IEnumerable<T> GetAll<T>() where T : class;
 
+        IEnumerable<T> GetForPage<T>(int page, int countPerPage) where T : class;
+
+        int GetCount<T>() where T : class;
+
         T Get<T>(int id) where T : class;
 
         IEnumerable<T> Find<T>(Func<T, bool> predicate) where T : class;

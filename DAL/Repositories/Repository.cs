@@ -45,6 +45,16 @@ namespace DAL.Repositories
             return this.db.Set<T>();
         }
 
+        public IEnumerable<T> GetForPage<T>(int page, int countPerPage) where T : class
+        {
+            return this.db.Set<T>().Skip(page * countPerPage).Take(countPerPage);
+        }
+
+        public int GetCount<T>() where T : class
+        {
+            return this.db.Set<T>().Count();
+        }
+
         public void Update<T>(T item) where T : class
         {
             this.db.Entry(item).State = EntityState.Modified;
