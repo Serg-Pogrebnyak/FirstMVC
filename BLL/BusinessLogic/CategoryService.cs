@@ -51,6 +51,7 @@ namespace BLL.BusinessLogic
             {
                 Name = newCategory.Name,
                 Tag = newCategory.Tag,
+                ImageInByte = newCategory.ImageInByte,
                 ParentCategory = parentCategory ?? null
             };
             this.db.Repository.Create(category);

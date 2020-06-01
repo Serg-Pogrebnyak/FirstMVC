@@ -1,0 +1,10 @@
+﻿@model TestMVC.ViewModels.CategoriesForDisplayViewModel
+
+    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index" asp-route-id="@Model.Tag">
+        <div class="card" style="width: 16rem; height: 14rem;">
+            <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
+            <div class="card-body">
+                <h5 class="card-title oneLines">@Model.Name</h5>
+            </div>
+        </div>
+    </a>

@@ -7,5 +7,7 @@
         public string Name { get; set; }
 
         public string Tag { get; set; }
+
+        public byte[] ImageInByte { get; set; }
     }
 }
