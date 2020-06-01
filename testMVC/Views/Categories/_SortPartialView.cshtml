@@ -1,10 +1,13 @@
-﻿<form method="get" asp-controller="Categories" asp-action="Index">
-    <div class="input-group-text">
+﻿@model TestMVC.ViewModels.PaginationCategoryViewModel
 
-        <input type="radio" id="sort1" name="sort" value="3">
+<form method="get" asp-controller="Categories" asp-action="Index">
+    <div class="input-group-text">
+        @{bool isChecked = Model.SortIndex == 3;}
+        <input type="radio" id="sort1" name="sort" value="3" checked="@isChecked">
         <input type="text" class="form-control" value="From a to z" disabled>
 
-        <input type="radio" id="sort2" name="sort" value="4">
+        @{isChecked = Model.SortIndex == 4;}
+        <input type="radio" id="sort2" name="sort" value="4" checked="@isChecked">
         <input type="text" class="form-control" value="From z to a" disabled>
 
         <input class="btn btn-success" type="submit" value="Sort" />

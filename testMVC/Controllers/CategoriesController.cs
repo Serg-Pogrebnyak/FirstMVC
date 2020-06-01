@@ -31,6 +31,7 @@ namespace TestMVC.Controllers
             {
                 CurrentPage = page,
                 CategoryList = categoryArray,
+                SortIndex = sort,
                 HasNext = paginationTuple.countOfPages > (page + 1) // plus one because start calculating from zero
             };
 

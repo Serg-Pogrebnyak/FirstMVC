@@ -17,5 +17,7 @@ namespace TestMVC.ViewModels
         }
 
         public bool HasNext { get; set; }
+
+        public int SortIndex { get; set; }
     }
 }
