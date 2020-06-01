@@ -6,12 +6,13 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestMVC.ViewModels;
+using static BLL.Interfaces.ICategoryService;
 
 namespace TestMVC.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly int countOfElenetPerPage = 1;
+        private readonly int countOfElenetPerPage = 6;
         private readonly ICategoryService categoryService;
 
         public CategoriesController(ICategoryService categoryService)
@@ -20,9 +21,10 @@ namespace TestMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int page = 0)
+        public IActionResult Index(int page = 0, int sort = 0)
         {
-            var paginationTuple = this.categoryService.GetElementsByPageAndCountOfPages(page, this.countOfElenetPerPage);
+            SortByEnum by = (SortByEnum)sort;
+            var paginationTuple = this.categoryService.GetElementsByPageAndCountOfPages(page, this.countOfElenetPerPage, by);
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
             CategoriesForDisplayViewModel[] categoryArray = mapper.Map<IEnumerable<CategoriesDTO>, CategoriesForDisplayViewModel[]>(paginationTuple.elements);
             PaginationCategoryViewModel paginationModel = new PaginationCategoryViewModel

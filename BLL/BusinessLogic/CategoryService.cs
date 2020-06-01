@@ -66,13 +66,18 @@ namespace BLL.BusinessLogic
             return categoryDTOList;
         }
 
-        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage)
+        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
-            var categoryDTOList = mapper.Map<IEnumerable<Categories>, List<CategoriesDTO>>(this.db.Repository.GetForPage<Categories>(byPage, elementPerPage));
+            var categoryDTOArray = mapper.Map<IEnumerable<Categories>, CategoriesDTO[]>(this.db.Repository.GetForPage<Categories>(byPage, elementPerPage));
             double notRoundedPages = this.db.Repository.GetCount<Categories>() / elementPerPage;
             int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
-            return (categoryDTOList, pages);
+            if (sortBy != SortByEnum.None)
+            {
+                categoryDTOArray = SortingService.SortByCriteria(categoryDTOArray, sortBy).ToArray();
+            }
+
+            return (categoryDTOArray, pages);
         }
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag)

@@ -7,15 +7,16 @@ namespace BLL.Interfaces
     {
         public enum SortByEnum : ushort
         {
-            PriceToUp = 0,
-            PriceDoDown = 1,
-            ByName = 2,
-            ByNameDescending = 3
+            None = 0,
+            PriceToUp = 1,
+            PriceDoDown = 2,
+            ByName = 3,
+            ByNameDescending = 4
         }
 
         public IEnumerable<CategoriesDTO> GetAllCategory();
 
-        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage);
+        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy);
 
         public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory);
 

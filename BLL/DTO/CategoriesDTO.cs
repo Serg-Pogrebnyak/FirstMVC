@@ -1,6 +1,8 @@
-﻿namespace BLL.DTO
+﻿using BLL.Interfaces;
+
+namespace BLL.DTO
 {
-    public class CategoriesDTO
+    public class CategoriesDTO : IName
     {
         public int Id { get; set; }
 
