@@ -18,11 +18,40 @@ namespace BLL.BusinessLogic
             this.db = db;
         }
 
-        public void CreateNewCategory(string name)
+        public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory)
         {
+            Categories[] categories = this.db.Repository.GetAll<Categories>().ToArray();
+            if (categories.SingleOrDefault(c => c.Name == newCategory.Name) == null && categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null)
+            {
+                return (null, true);
+            }
+            else if (!(categories.SingleOrDefault(c => c.Name == newCategory.Name) == null))
+            {
+                return ("Contain category with this name", false);
+            }
+            else if (!(categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null))
+            {
+                return ("Contain category with this tag", false);
+            }
+            else
+            {
+                return ("Internal error", false);
+            }
+        }
+
+        public void CreateNewCategory(CategoriesDTO newCategory)
+        {
+            Categories parentCategory = null;
+            if (newCategory.ParentCategory != null)
+            {
+                parentCategory = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Name == newCategory.ParentCategory);
+            }
+
             Categories category = new Categories
             {
-                Name = name
+                Name = newCategory.Name,
+                Tag = newCategory.Tag,
+                ParentCategory = parentCategory ?? null
             };
             this.db.Repository.Create(category);
             this.db.Save();

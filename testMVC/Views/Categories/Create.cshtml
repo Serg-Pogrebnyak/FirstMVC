@@ -1,12 +1,31 @@
 ﻿@model TestMVC.ViewModels.CategoriesViewModel
 
-<form method="Post" asp-controller="Categories" asp-action="Create">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="Name"></label><br />
-        <input asp-for="Name" />
-        <span asp-validation-for="Name"></span>
-    </div>
+    <form method="Post" asp-controller="Categories" asp-action="Create">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Name"></label><br />
+            <input asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <label asp-for="Tag"></label><br />
+            <input asp-for="Tag" />
+            <span asp-validation-for="Tag"></span>
+        </div>
+        <div>
+            <label asp-for="ParentCategory"></label><br />
+            <select id="Category" name="ParentCategory">
+                <option></option>
+                @foreach (var categories in ViewBag.Categories)
+                {
+                    <option>
+                        @categories.Name
+                    </option>
 
-    <input class="btn btn-success" type="submit" value="Создать" />
-</form>
+                }
+            </select>
+            <span asp-validation-for="ParentCategory"></span>
+        </div>
+
+        <input class="btn btn-success" type="submit" value="Создать" />
+    </form>

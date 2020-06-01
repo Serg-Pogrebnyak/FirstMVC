@@ -7,5 +7,7 @@
         public string Name { get; set; }
 
         public string Tag { get; set; }
+
+        public string ParentCategory { get; set; }
     }
 }

@@ -28,14 +28,36 @@ namespace TestMVC.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult Create() => this.View();
+        public IActionResult Create()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+            this.ViewBag.Categories = categoryList;
+
+            return this.View();
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Create(string name)
+        public IActionResult Create(CategoriesViewModel model)
         {
-            this.categoryService.CreateNewCategory(name);
-            return this.RedirectToAction("Index");
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesViewModel, CategoriesDTO>()).CreateMapper();
+            var newCategory = mapper.Map<CategoriesViewModel, CategoriesDTO>(model);
+
+            var validationTuple = this.categoryService.IsContainCategoryWithNameAndTag(newCategory);
+            if (this.ModelState.IsValid && validationTuple.isValid)
+            {
+                this.categoryService.CreateNewCategory(newCategory);
+                return this.RedirectToAction("Index");
+            }
+            else
+            {
+                this.ModelState.AddModelError(string.Empty, validationTuple.textError);
+                mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+                var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+                this.ViewBag.Categories = categoryList;
+                return this.View();
+            }
         }
     }
 }

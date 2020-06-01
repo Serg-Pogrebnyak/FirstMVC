@@ -15,7 +15,9 @@ namespace BLL.Interfaces
 
         public IEnumerable<CategoriesDTO> GetAllCategory();
 
-        public void CreateNewCategory(string name);
+        public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory);
+
+        public void CreateNewCategory(CategoriesDTO newCategory);
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag);
 
