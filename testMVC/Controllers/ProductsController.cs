@@ -86,7 +86,6 @@ namespace TestMVC.Controllers
                             Description = newProduct.Description
                         };
                     byte[] imageData = null;
-                    // считываем переданный файл в массив байтов
                     using (var binaryReader = new BinaryReader(newProduct.File.OpenReadStream()))
                     {
                         imageData = binaryReader.ReadBytes((int)newProduct.File.Length);

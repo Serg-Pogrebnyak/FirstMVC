@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -47,12 +48,23 @@ namespace TestMVC.Controllers
             var validationTuple = this.categoryService.IsContainCategoryWithNameAndTag(newCategory);
             if (this.ModelState.IsValid && validationTuple.isValid)
             {
+                byte[] imageData = null;
+                using (var binaryReader = new BinaryReader(model.File.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)model.File.Length);
+                }
+
+                newCategory.ImageInByte = imageData;
                 this.categoryService.CreateNewCategory(newCategory);
                 return this.RedirectToAction("Index");
             }
             else
             {
-                this.ModelState.AddModelError(string.Empty, validationTuple.textError);
+                if (validationTuple.textError != null)
+                {
+                    this.ModelState.AddModelError(string.Empty, validationTuple.textError);
+                }
+
                 mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
                 var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
                 this.ViewBag.Categories = categoryList;

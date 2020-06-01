@@ -10,6 +10,8 @@ namespace DAL.Entities
 
         public string Tag { get; set; }
 
+        public byte[] ImageInByte { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<Categories> ChildCategory { get; set; }
