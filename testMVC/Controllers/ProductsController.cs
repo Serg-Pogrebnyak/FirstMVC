@@ -44,12 +44,13 @@ namespace TestMVC.Controllers
 
         [HttpGet]
         [Route("Products/Index/{id?}")]
-        public IActionResult Index(string id)
+        public IActionResult Index(string id, PaginationProductViewModel paginationModel = null)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
             var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.GetAllProductInCategory(id));
+            paginationModel.ProductArray = productList.ToArray();
 
-            return this.View(productList);
+            return this.View(paginationModel);
         }
 
         [HttpPost]
