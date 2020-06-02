@@ -193,8 +193,11 @@ namespace BLL.BusinessLogic
                     Id = product.Id,
                     Name = product.Name,
                     Price = product.Price,
-                    Description = product.Description
+                    Description = product.Description,
+                    LongDescription = product.LongDescription,
+                    ImageInByte = product.ImageInByte
                 };
+
                 productDTOList.Add(productDTO);
             }
 

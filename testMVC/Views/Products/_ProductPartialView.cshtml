@@ -1,9 +1,15 @@
 ﻿@model TestMVC.ViewModels.ProductForDisplayViewModel
-<td> @Model.Name</td>
-<td> @Model.Price</td>
-<td>
-    <form method="post" asp-controller="Products" asp-action="Buy">
-        @Html.Hidden("productId", Model.Id)
-        <button type="submit" class="btn btn-success">Купить</button>
-    </form>
-</td>
+<link rel="stylesheet" href="~/css/site.css" />
+<div class="card" style="width: 16rem; height: 22rem;">
+    <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
+    <div class="card-body">
+        <h5 class="card-title oneLines">@Model.Name</h5>
+        <p class="card-text threeLines">@Model.Description</p>
+        <div class="buyButton">
+            <form method="post" asp-controller="Products" asp-action="Buy">
+                @Html.Hidden("productId", Model.Id)
+                <button type="submit" class="btn btn-success">Buy</button>
+            </form>
+        </div>
+    </div>
+</div>

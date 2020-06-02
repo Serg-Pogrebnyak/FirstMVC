@@ -1,36 +1,39 @@
 ﻿@model TestMVC.ViewModels.CategoriesViewModel
+@{
+    ViewData["Title"] = "Create Category";
+}
 
-    <form method="Post" asp-controller="Categories" asp-action="Create" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="Name"></label><br />
-            <input asp-for="Name" />
-            <span asp-validation-for="Name"></span>
-        </div>
-        <div>
-            <label asp-for="Tag"></label><br />
-            <input asp-for="Tag" />
-            <span asp-validation-for="Tag"></span>
-        </div>
-        <div>
-            <label asp-for="File"></label><br />
-            <input type="file" class="form-control" asp-for="File" />
-            <span asp-validation-for="File"></span>
-        </div>
-        <div>
-            <label asp-for="ParentCategory"></label><br />
-            <select id="Category" name="ParentCategory">
-                <option></option>
-                @foreach (var categories in ViewBag.Categories)
-                {
-                    <option>
-                        @categories.Name
-                    </option>
+<form method="Post" asp-controller="Categories" asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="Tag"></label><br />
+        <input asp-for="Tag" />
+        <span asp-validation-for="Tag"></span>
+    </div>
+    <div>
+        <label asp-for="File"></label><br />
+        <input type="file" class="form-control" asp-for="File" />
+        <span asp-validation-for="File"></span>
+    </div>
+    <div>
+        <label asp-for="ParentCategory"></label><br />
+        <select id="Category" name="ParentCategory">
+            <option></option>
+            @foreach (var categories in ViewBag.Categories)
+            {
+                <option>
+                    @categories.Name
+                </option>
 
-                }
-            </select>
-            <span asp-validation-for="ParentCategory"></span>
-        </div>
+            }
+        </select>
+        <span asp-validation-for="ParentCategory"></span>
+    </div>
 
-        <input class="btn btn-success" type="submit" value="Create" />
-    </form>
+    <input class="btn btn-success" type="submit" value="Create" />
+</form>
