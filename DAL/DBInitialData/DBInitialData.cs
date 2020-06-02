@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using DAL.Entities;
 
@@ -75,12 +77,39 @@ namespace DAL.InitialData
         private static byte[] ImageInByte(string name)
         {
             var path = "wwwroot/Images/" + name;
-            using (Bitmap image = new Bitmap(System.Drawing.Image.FromFile(path)))
+            using (Bitmap image = ResizeImage(new Bitmap(System.Drawing.Image.FromFile(path))))
             {
                 MemoryStream ms = new MemoryStream();
                 image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 return ms.ToArray();
             }
+        }
+
+        public static Bitmap ResizeImage(Image image)
+        {
+            int width = 286;
+            int height = 180;
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
         }
     }
 }

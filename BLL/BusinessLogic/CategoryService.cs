@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BLL.DTO;
+using BLL.Extensions;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -52,7 +53,7 @@ namespace BLL.BusinessLogic
             {
                 Name = newCategory.Name,
                 Tag = newCategory.Tag,
-                ImageInByte = newCategory.ImageInByte,
+                ImageInByte = newCategory.ImageInByte.ResizeImageFromByte(),
                 ParentCategory = parentCategory ?? null
             };
             this.db.Repository.Create(category);
