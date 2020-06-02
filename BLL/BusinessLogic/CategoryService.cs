@@ -22,22 +22,48 @@ namespace BLL.BusinessLogic
 
         public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory)
         {
-            Categories[] categories = this.db.Repository.GetAll<Categories>().ToArray();
-            if (categories.SingleOrDefault(c => c.Name == newCategory.Name) == null && categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null)
+            // validate new element because id == 0
+            if (newCategory.Id == 0)
             {
-                return (null, true);
-            }
-            else if (!(categories.SingleOrDefault(c => c.Name == newCategory.Name) == null))
-            {
-                return ("Contain category with this name", false);
-            }
-            else if (!(categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null))
-            {
-                return ("Contain category with this tag", false);
-            }
+                Categories[] categories = this.db.Repository.GetAll<Categories>().ToArray();
+                if (categories.SingleOrDefault(c => c.Name == newCategory.Name) == null && categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null)
+                {
+                    return (null, true);
+                }
+                else if (!(categories.SingleOrDefault(c => c.Name == newCategory.Name) == null))
+                {
+                    return ("Contain category with this name", false);
+                }
+                else if (!(categories.SingleOrDefault(c => c.Tag == newCategory.Tag) == null))
+                {
+                    return ("Contain category with this tag", false);
+                }
+                else
+                {
+                    return ("Internal error", false);
+                }
+            }// validate new element because id != 0
             else
             {
-                return ("Internal error", false);
+                Categories[] categories = this.db.Repository.GetAll<Categories>().ToArray();
+                bool validateResultByName = categories.SingleOrDefault(c => c.Name == newCategory.Name && c.Id != newCategory.Id) == null;
+                bool validateResultByTag = categories.SingleOrDefault(c => c.Tag == newCategory.Tag && c.Id != newCategory.Id) == null;
+                if (validateResultByName && validateResultByTag)
+                {
+                    return (null, true);
+                }
+                else if (!validateResultByName)
+                {
+                    return ("Contain category with this name", false);
+                }
+                else if (!validateResultByTag)
+                {
+                    return ("Contain category with this tag", false);
+                }
+                else
+                {
+                    return ("Internal error", false);
+                }
             }
         }
 
@@ -57,6 +83,28 @@ namespace BLL.BusinessLogic
                 ParentCategory = parentCategory ?? null
             };
             this.db.Repository.Create(category);
+            this.db.Save();
+        }
+
+        public void UpdateCategory(CategoriesDTO changedCategory)
+        {
+            Categories category = this.db.Repository.Get<Categories>(changedCategory.Id);
+            category.Name = changedCategory.Name;
+            category.Tag = changedCategory.Tag;
+
+            Categories parentCategory = null;
+            if (changedCategory.ParentCategory != null)
+            {
+                parentCategory = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Name == changedCategory.ParentCategory);
+            }
+
+            if (changedCategory.ImageInByte != null)
+            {
+                category.ImageInByte = changedCategory.ImageInByte.ResizeImageFromByte();
+            }
+
+            category.ParentCategory = parentCategory;
+            this.db.Repository.Update(category);
             this.db.Save();
         }
 

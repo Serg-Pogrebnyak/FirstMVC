@@ -24,6 +24,8 @@ namespace BLL.Interfaces
 
         public void CreateNewCategory(CategoriesDTO newCategory);
 
+        public void UpdateCategory(CategoriesDTO changedCategory);
+
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag);
 
         public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by);

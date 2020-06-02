@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -92,6 +93,8 @@ namespace TestMVC.Controllers
 
             mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
             var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+            CategoriesForDisplayViewModel currentCategory = categoryList.First(c => c.Name == category.Name);
+            categoryList.Remove(currentCategory);
             this.ViewBag.Categories = categoryList;
 
             return this.View(category);
@@ -101,7 +104,40 @@ namespace TestMVC.Controllers
         [HttpPost]
         public IActionResult Edit(EditCategoriesViewModel changedModel)
         {
-            return this.RedirectToAction("Edit", changedModel);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<EditCategoriesViewModel, CategoriesDTO>()).CreateMapper();
+            var changedCategoryDTO = mapper.Map<EditCategoriesViewModel, CategoriesDTO>(changedModel);
+
+            var validationTuple = this.categoryService.IsContainCategoryWithNameAndTag(changedCategoryDTO);
+            if (this.ModelState.IsValid && validationTuple.isValid)
+            {
+                if (changedModel.File != null)
+                {
+                    byte[] imageData = null;
+                    using (var binaryReader = new BinaryReader(changedModel.File.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)changedModel.File.Length);
+                    }
+
+                    changedCategoryDTO.ImageInByte = imageData;
+                }
+
+                this.categoryService.UpdateCategory(changedCategoryDTO);
+                return this.RedirectToAction("Index");
+            }
+            else
+            {
+                if (validationTuple.textError != null)
+                {
+                    this.ModelState.AddModelError(string.Empty, validationTuple.textError);
+                }
+
+                mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+                var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+                CategoriesForDisplayViewModel currentCategory = categoryList.First(c => c.Name == changedModel.Name);
+                categoryList.Remove(currentCategory);
+                this.ViewBag.Categories = categoryList;
+                return this.View(changedModel);
+            }
         }
     }
 }
