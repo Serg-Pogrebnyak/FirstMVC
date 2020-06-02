@@ -82,5 +82,12 @@ namespace TestMVC.Controllers
                 return this.View();
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            return this.RedirectToAction("Index", id);
+        }
     }
 }
