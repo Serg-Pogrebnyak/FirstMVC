@@ -9,5 +9,11 @@
         public int PriceTo { get; set; }
 
         public int Sort { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public bool HasPrevious { get; set; }
+
+        public bool HasNext { get; set; }
     }
 }

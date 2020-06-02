@@ -30,5 +30,25 @@
                 </div>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col">
+                <ul class="pagination justify-content-center">
+                    @{int nextPage = Model.CurrentPage + 1;}
+                    @{int previousPage = Model.CurrentPage - 1;}
+                    @if (Model.HasPrevious)
+                    {
+                        <input type="hidden" name="CurrentPage" value="@previousPage" />
+                        <li class="page-item"><input class="page-link" type="submit" value="Next" /></li>
+                    }
+                    @if (Model.HasNext)
+                    {
+                        <input type="hidden" name="CurrentPage" value="@nextPage" />
+                        <li class="page-item"><input class="page-link" type="submit" value="Next" /></li>
+                    }
+                </ul>
+            </div>
+        </div>
+
     </div>
 </form>
