@@ -87,7 +87,21 @@ namespace TestMVC.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return this.RedirectToAction("Index", id);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, EditCategoriesViewModel>()).CreateMapper();
+            var category = mapper.Map<CategoriesDTO, EditCategoriesViewModel>(this.categoryService.GetCategory(id));
+
+            mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+            this.ViewBag.Categories = categoryList;
+
+            return this.View(category);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Edit(EditCategoriesViewModel changedModel)
+        {
+            return this.RedirectToAction("Edit", changedModel);
         }
     }
 }

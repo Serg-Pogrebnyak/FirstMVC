@@ -67,6 +67,13 @@ namespace BLL.BusinessLogic
             return categoryDTOList;
         }
 
+        public CategoriesDTO GetCategory(int id)
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
+            var categoryDTO = mapper.Map<Categories, CategoriesDTO>(this.db.Repository.Get<Categories>(id));
+            return categoryDTO;
+        }
+
         public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();

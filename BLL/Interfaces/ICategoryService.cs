@@ -16,6 +16,8 @@ namespace BLL.Interfaces
 
         public IEnumerable<CategoriesDTO> GetAllCategory();
 
+        public CategoriesDTO GetCategory(int id);
+
         public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy);
 
         public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory);

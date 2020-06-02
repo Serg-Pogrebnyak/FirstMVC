@@ -1,15 +1,16 @@
-﻿@model TestMVC.ViewModels.CategoriesViewModel
+﻿@model TestMVC.ViewModels.EditCategoriesViewModel
 
-    <form method="Post" asp-controller="Categories" asp-action="Create" enctype="multipart/form-data">
+    <form method="Post" asp-controller="Categories" asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
         <div asp-validation-summary="ModelOnly"></div>
         <div>
             <label asp-for="Name"></label><br />
-            <input asp-for="Name" />
+            <input asp-for="Name" value="@Model.Name" />
             <span asp-validation-for="Name"></span>
         </div>
         <div>
             <label asp-for="Tag"></label><br />
-            <input asp-for="Tag" />
+            <input asp-for="Tag" value="@Model.Tag" />
             <span asp-validation-for="Tag"></span>
         </div>
         <div>
@@ -32,5 +33,5 @@
             <span asp-validation-for="ParentCategory"></span>
         </div>
 
-        <input class="btn btn-success" type="submit" value="Create" />
+        <input class="btn btn-success" type="submit" value="Save Changes" />
     </form>
