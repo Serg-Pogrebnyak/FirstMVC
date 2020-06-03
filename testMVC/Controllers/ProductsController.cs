@@ -57,11 +57,13 @@ namespace TestMVC.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ProductViewModel productViewModel = new ProductViewModel { ReturnURL = this.Request.Headers["Referer"].ToString() };
+
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
             var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
 
             this.ViewBag.Categories = categoryList;
-            return this.View();
+            return this.View(productViewModel);
         }
 
         [Authorize(Roles = "Admin")]
@@ -76,7 +78,8 @@ namespace TestMVC.Controllers
                         {
                             Name = newProduct.Name,
                             Price = newProduct.Price,
-                            Description = newProduct.Description
+                            Description = newProduct.Description,
+                            LongDescription = newProduct.LongDescription
                         };
                     byte[] imageData = null;
                     using (var binaryReader = new BinaryReader(newProduct.File.OpenReadStream()))
@@ -94,7 +97,7 @@ namespace TestMVC.Controllers
                     return this.View();
                 }
 
-                return this.RedirectToAction("Index");
+                return this.Redirect(newProduct.ReturnURL);
             }
             else
             {

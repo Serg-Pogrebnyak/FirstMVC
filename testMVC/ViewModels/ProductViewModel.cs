@@ -26,5 +26,7 @@ namespace TestMVC.ViewModels
         [Required]
         [Display(Name = "Choose product image (image should be 286x180px)")]
         public IFormFile File { get; set; }
+
+        public string ReturnURL { get; set; }
     }
 }

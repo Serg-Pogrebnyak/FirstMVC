@@ -2,45 +2,52 @@
 @{
     ViewData["Title"] = "Create new Product";
 }
-<form method="Post" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="Name"></label><br />
-        <input asp-for="Name" />
-        <span asp-validation-for="Name"></span>
-    </div>
+    <form method="Post" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
+        @Html.Hidden("ReturnURL", Model.ReturnURL)
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Name"></label><br />
+            <input asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
 
-    <div>
-        <label asp-for="Price"></label><br />
-        <input asp-for="Price" />
-        <span asp-validation-for="Price"></span>
-    </div>
+        <div>
+            <label asp-for="Price"></label><br />
+            <input asp-for="Price" />
+            <span asp-validation-for="Price"></span>
+        </div>
 
-    <div>
-        <label asp-for="Description"></label><br />
-        <input asp-for="Description" />
-        <span asp-validation-for="Description"></span>
-    </div>
+        <div>
+            <label asp-for="Description"></label><br />
+            <input asp-for="Description" />
+            <span asp-validation-for="Description"></span>
+        </div>
 
-    <div>
-        <label asp-for="Category"></label><br />
-        <select id="Category" name="Category">
-            @foreach (var categories in ViewBag.Categories)
-            {
-                <option>
-                    @categories.Name
-                </option>
+        <div>
+            <label asp-for="LongDescription"></label><br />
+            <textarea asp-for="LongDescription" class="form-control" text-wrap:normal" type="text" placeholder="Please add Long Description"></textarea>
+            <span asp-validation-for="LongDescription"></span>
+        </div>
 
-            }
-        </select>
-        <span asp-validation-for="Category"></span>
-    </div>
+        <div>
+            <label asp-for="Category"></label><br />
+            <select id="Category" name="Category">
+                @foreach (var categories in ViewBag.Categories)
+                {
+                    <option>
+                        @categories.Name
+                    </option>
 
-    <div>
-        <label asp-for="File"></label><br />
-        <input type="file" class="form-control" asp-for="File" />
-        <span asp-validation-for="File"></span>
-    </div>
+                }
+            </select>
+            <span asp-validation-for="Category"></span>
+        </div>
 
-    <input class="btn btn-success" type="submit" value="Создать" />
-</form>
+        <div>
+            <label asp-for="File"></label><br />
+            <input type="file" class="form-control" asp-for="File" />
+            <span asp-validation-for="File"></span>
+        </div>
+
+        <input class="btn btn-success" type="submit" value="Create new Product" />
+    </form>
