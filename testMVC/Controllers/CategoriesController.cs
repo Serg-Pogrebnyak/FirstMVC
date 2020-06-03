@@ -25,7 +25,7 @@ namespace TestMVC.Controllers
         public IActionResult Index(int page = 0, int sort = 0)
         {
             SortByEnum by = (SortByEnum)sort;
-            var paginationTuple = this.categoryService.GetElementsByPageAndCountOfPages(page, this.countOfElenetPerPage, by);
+            var paginationTuple = this.categoryService.GetCategoriesByPageAndCountOfPages(page, this.countOfElenetPerPage, by);
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
             CategoriesForDisplayViewModel[] categoryArray = mapper.Map<IEnumerable<CategoriesDTO>, CategoriesForDisplayViewModel[]>(paginationTuple.elements);
             PaginationCategoryViewModel paginationModel = new PaginationCategoryViewModel

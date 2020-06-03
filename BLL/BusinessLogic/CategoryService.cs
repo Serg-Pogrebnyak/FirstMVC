@@ -122,7 +122,7 @@ namespace BLL.BusinessLogic
             return categoryDTO;
         }
 
-        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy)
+        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetCategoriesByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
             var categoryDTOArray = mapper.Map<IEnumerable<Categories>, CategoriesDTO[]>(this.db.Repository.GetForPage<Categories>(byPage, elementPerPage));
@@ -130,10 +130,26 @@ namespace BLL.BusinessLogic
             int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
             if (sortBy != SortByEnum.None)
             {
-                categoryDTOArray = SortingService.SortByCriteria(categoryDTOArray, sortBy).ToArray();
+                categoryDTOArray = SelectingSortingService.SortByCriteria(categoryDTOArray, sortBy).ToArray();
             }
 
             return (categoryDTOArray, pages);
+        }
+
+        public(IEnumerable<ProductDTO> elements, int countOfPages) GetProductsByPageAndCountOfPages(string categoryTag, int elementPerPage, SelectingSortingProductCriteriaBLL criteria)
+        {
+            Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Tag == categoryTag);
+            var allProductsList = this.GetAllProducts(category).Distinct();
+            allProductsList = SelectingSortingService.SelectByPrice(allProductsList.Cast<IPrice>().ToArray(), criteria.PriceFrom, criteria.PriceTo).Cast<ProductDTO>().ToList();
+            if (criteria.SortBy != SortByEnum.None)
+            {
+                allProductsList = SelectingSortingService.SortByCriteria(allProductsList.ToArray(), criteria.SortBy).Cast<ProductDTO>().ToList();
+            }
+
+            double notRoundedPages = this.db.Repository.GetCount<Categories>() / elementPerPage;
+            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
+            var selectedProducts = allProductsList.Skip(criteria.CurrentPage * elementPerPage).Take(elementPerPage);
+            return (selectedProducts, pages);
         }
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag)
@@ -219,7 +235,7 @@ namespace BLL.BusinessLogic
             {
                 case SortByEnum.PriceToUp:
                     return productDTOList.OrderBy(productDTO => productDTO.Price);
-                case SortByEnum.PriceDoDown:
+                case SortByEnum.PriceToDown:
                     return productDTOList.OrderByDescending(productDTO => productDTO.Price);
                 case SortByEnum.ByName:
                     return productDTOList.OrderBy(productDTO => productDTO.Name);

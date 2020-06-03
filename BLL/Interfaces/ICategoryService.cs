@@ -9,7 +9,7 @@ namespace BLL.Interfaces
         {
             None = 0,
             PriceToUp = 1,
-            PriceDoDown = 2,
+            PriceToDown = 2,
             ByName = 3,
             ByNameDescending = 4
         }
@@ -18,7 +18,9 @@ namespace BLL.Interfaces
 
         public CategoriesDTO GetCategory(int id);
 
-        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetElementsByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy);
+        public(IEnumerable<CategoriesDTO> elements, int countOfPages) GetCategoriesByPageAndCountOfPages(int byPage, int elementPerPage, SortByEnum sortBy);
+
+        public(IEnumerable<ProductDTO> elements, int countOfPages) GetProductsByPageAndCountOfPages(string categoryTag, int elementPerPage, SelectingSortingProductCriteriaBLL criteria);
 
         public(string textError, bool isValid) IsContainCategoryWithNameAndTag(CategoriesDTO newCategory);
 

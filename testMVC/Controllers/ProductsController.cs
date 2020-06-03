@@ -16,6 +16,7 @@ namespace TestMVC.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly int countOfElenetPerPage = 6;
         private readonly UserManager<User> userManager;
         private readonly ILogger logger;
         private readonly IProductService productService;
@@ -46,9 +47,14 @@ namespace TestMVC.Controllers
         [Route("Products/Index/{id?}")]
         public IActionResult Index(string id, PaginationProductViewModel paginationModel = null)
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.GetAllProductInCategory(id));
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PaginationProductViewModel, SelectingSortingProductCriteriaBLL>()).CreateMapper();
+            var criteriaBLL = mapper.Map<PaginationProductViewModel, SelectingSortingProductCriteriaBLL>(paginationModel);
+            var paginationTuple = this.categoryService.GetProductsByPageAndCountOfPages(id, this.countOfElenetPerPage, criteriaBLL);
+
+            mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(paginationTuple.elements);
             paginationModel.ProductArray = productList.ToArray();
+            paginationModel.HasNext = paginationTuple.countOfPages > (paginationModel.CurrentPage + 1); // plus one because start calculating from zero
 
             return this.View(paginationModel);
         }

@@ -1,6 +1,8 @@
-﻿namespace BLL.DTO
+﻿using BLL.Interfaces;
+
+namespace BLL.DTO
 {
-    public class ProductDTO
+    public class ProductDTO : IName, IPrice
     {
         public int Id { get; set; }
 
