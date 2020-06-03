@@ -126,8 +126,8 @@ namespace BLL.BusinessLogic
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Categories, CategoriesDTO>()).CreateMapper();
             var categoryDTOArray = mapper.Map<IEnumerable<Categories>, CategoriesDTO[]>(this.db.Repository.GetForPage<Categories>(byPage, elementPerPage));
-            double notRoundedPages = this.db.Repository.GetCount<Categories>() / elementPerPage;
-            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
+            double categoriesCount = this.db.Repository.GetCount<Categories>();
+            int pages = Convert.ToInt32(Math.Ceiling(categoriesCount / elementPerPage));
             if (sortBy != SortByEnum.None)
             {
                 categoryDTOArray = SelectingSortingService.SortByCriteria(categoryDTOArray, sortBy).ToArray();
@@ -140,8 +140,9 @@ namespace BLL.BusinessLogic
         {
             Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Tag == categoryTag);
             var allProductsList = this.GetAllProducts(category).Distinct();
-            double notRoundedPages = allProductsList.Count() / elementPerPage;
-            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
+            double countOfProducts = allProductsList.Count();
+            double notRoundedPages = Math.Ceiling(countOfProducts / elementPerPage);
+            int pages = Convert.ToInt32(notRoundedPages);
 
             allProductsList = SelectingSortingService.SelectByPrice(allProductsList.Cast<IPrice>().ToArray(), criteria.PriceFrom, criteria.PriceTo).Cast<ProductDTO>().ToList();
             if (criteria.SortBy != SortByEnum.None)

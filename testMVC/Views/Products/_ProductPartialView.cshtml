@@ -8,8 +8,8 @@
         <div class="buyButton">
             <form method="post" asp-controller="Products" asp-action="Buy">
                 @Html.Hidden("productId", Model.Id)
-                <button type="submit" class="btn btn-success">Buy</button>
-            </form>
+                <button type="submit" class="btn btn-success">Buy</button>@Model.Price.ToString("N2")
+</form>
         </div>
     </div>
 </div>
