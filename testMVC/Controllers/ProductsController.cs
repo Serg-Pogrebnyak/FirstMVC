@@ -108,7 +108,11 @@ namespace TestMVC.Controllers
         public IActionResult Edit(int id)
         {
             this.logger.LogError(id.ToString());
-            return this.RedirectToAction("Create");
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+
+            this.ViewBag.Categories = categoryList;
+            return this.View();
         }
 
         [HttpGet]
