@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using TestMVC.Extensions;
 using TestMVC.Models;
 using TestMVC.ViewModels;
-using static BLL.Interfaces.ICategoryService;
 
 namespace TestMVC.Controllers
 {
@@ -18,35 +17,27 @@ namespace TestMVC.Controllers
     {
         private readonly int countOfElenetPerPage = 6;
         private readonly UserManager<User> userManager;
-        private readonly ILogger logger;
         private readonly IProductService productService;
         private readonly ICategoryService categoryService;
         private readonly IOrderService orderService;
 
-        public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IProductService productService, ICategoryService categoryService)
+        public ProductsController(IOrderService orderService, UserManager<User> userManager, IProductService productService, ICategoryService categoryService)
         {
             this.userManager = userManager;
-            this.logger = logger;
             this.productService = productService;
             this.categoryService = categoryService;
             this.orderService = orderService;
         }
 
         [HttpGet]
-        [Route("Products")]
-        [Route("Products/Index")]
-        public IActionResult Index()
-        {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.productService.GetAllProduct());
-
-            return this.View(productList);
-        }
-
-        [HttpGet]
         [Route("Products/Index/{id?}")]
-        public IActionResult Index(string id, PaginationProductViewModel paginationModel = null)
+        public IActionResult Index(string id, PaginationProductViewModel paginationModel)
         {
+            if (paginationModel.Submit != null)
+            {
+                paginationModel.CurrentPage = paginationModel.Submit == "Next" ? paginationModel.CurrentPage + 1 : paginationModel.CurrentPage - 1;
+            }
+
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PaginationProductViewModel, SelectingSortingProductCriteriaBLL>()).CreateMapper();
             var criteriaBLL = mapper.Map<PaginationProductViewModel, SelectingSortingProductCriteriaBLL>(paginationModel);
             var paginationTuple = this.categoryService.GetProductsByPageAndCountOfPages(id, this.countOfElenetPerPage, criteriaBLL);
@@ -59,16 +50,7 @@ namespace TestMVC.Controllers
             return this.View(paginationModel);
         }
 
-        [HttpPost]
-        public IActionResult Index(int id, int priceFrom, int priceTo, int sort)
-        {
-            SortByEnum by = (SortByEnum)sort;
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
-            var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(this.categoryService.SelectProduct(id, priceFrom, priceTo, by));
-
-            return this.View(productList);
-        }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -79,6 +61,7 @@ namespace TestMVC.Controllers
             return this.View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create(ProductViewModel newProduct)
         {

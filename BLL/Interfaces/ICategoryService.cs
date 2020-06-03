@@ -30,8 +30,6 @@ namespace BLL.Interfaces
 
         public IEnumerable<ProductDTO> GetAllProductInCategory(string tag);
 
-        public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by);
-
         public bool ContainCategoryWithName(string name);
     }
 }

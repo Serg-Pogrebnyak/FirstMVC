@@ -140,14 +140,15 @@ namespace BLL.BusinessLogic
         {
             Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Tag == categoryTag);
             var allProductsList = this.GetAllProducts(category).Distinct();
+            double notRoundedPages = allProductsList.Count() / elementPerPage;
+            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
+
             allProductsList = SelectingSortingService.SelectByPrice(allProductsList.Cast<IPrice>().ToArray(), criteria.PriceFrom, criteria.PriceTo).Cast<ProductDTO>().ToList();
             if (criteria.SortBy != SortByEnum.None)
             {
                 allProductsList = SelectingSortingService.SortByCriteria(allProductsList.ToArray(), criteria.SortBy).Cast<ProductDTO>().ToList();
             }
 
-            double notRoundedPages = this.db.Repository.GetCount<Categories>() / elementPerPage;
-            int pages = Convert.ToInt32(Math.Ceiling(notRoundedPages));
             var selectedProducts = allProductsList.Skip(criteria.CurrentPage * elementPerPage).Take(elementPerPage);
             return (selectedProducts, pages);
         }
@@ -156,23 +157,6 @@ namespace BLL.BusinessLogic
         {
             Categories category = this.db.Repository.GetAll<Categories>().SingleOrDefault(category => category.Tag == tag);
             return this.GetAllProducts(category).Distinct();
-        }
-
-        public IEnumerable<ProductDTO> SelectProduct(int id, int priceFrom, int priceTo, SortByEnum by)
-        {
-            List<ProductDTO> productDTOList;
-            if (id != 0)
-            {
-                Categories category = this.db.Repository.Get<Categories>(id);
-                productDTOList = this.GetAllProducts(category).Distinct().ToList();
-            }
-            else
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDTO>()).CreateMapper();
-                productDTOList = mapper.Map<IEnumerable<Product>, List<ProductDTO>>(this.db.Repository.GetAll<Product>());
-            }
-
-            return this.SelectAndSortByCriteria(productDTOList, priceFrom, priceTo, by);
         }
 
         public bool ContainCategoryWithName(string name)
@@ -215,32 +199,6 @@ namespace BLL.BusinessLogic
                 };
 
                 productDTOList.Add(productDTO);
-            }
-
-            return productDTOList;
-        }
-
-        private IEnumerable<ProductDTO> SelectAndSortByCriteria(List<ProductDTO> productDTOList, int priceFrom, int priceTo, SortByEnum by)
-        {
-            if (priceTo > priceFrom)
-            {
-                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom && productDTO.Price <= priceTo).ToList();
-            }
-            else
-            {
-                productDTOList = productDTOList.Where(productDTO => productDTO.Price >= priceFrom).ToList();
-            }
-
-            switch (by)
-            {
-                case SortByEnum.PriceToUp:
-                    return productDTOList.OrderBy(productDTO => productDTO.Price);
-                case SortByEnum.PriceToDown:
-                    return productDTOList.OrderByDescending(productDTO => productDTO.Price);
-                case SortByEnum.ByName:
-                    return productDTOList.OrderBy(productDTO => productDTO.Name);
-                case SortByEnum.ByNameDescending:
-                    return productDTOList.OrderByDescending(productDTO => productDTO.Name);
             }
 
             return productDTOList;

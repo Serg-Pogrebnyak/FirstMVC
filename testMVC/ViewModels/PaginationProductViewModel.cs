@@ -12,6 +12,8 @@ namespace TestMVC.ViewModels
 
         public int Sort { get; set; }
 
+        public string Submit { get; set; }
+
         public SortByEnum SortBy
         {
             get
