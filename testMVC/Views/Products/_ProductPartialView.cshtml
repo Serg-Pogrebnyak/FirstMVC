@@ -1,15 +1,33 @@
 ﻿@model TestMVC.ViewModels.ProductForDisplayViewModel
 <link rel="stylesheet" href="~/css/site.css" />
-<div class="card" style="width: 16rem; height: 22rem;">
+<div class="card" style="width: 16rem; height: 25rem;">
     <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
     <div class="card-body">
         <h5 class="card-title oneLines">@Model.Name</h5>
         <p class="card-text threeLines">@Model.Description</p>
-        <div class="buyButton">
-            <form method="post" asp-controller="Products" asp-action="Buy">
-                @Html.Hidden("productId", Model.Id)
-                <button type="submit" class="btn btn-success">Buy</button>@Model.Price.ToString("N2")
-</form>
-        </div>
+        
+        <form method="post" asp-controller="Products" asp-action="Buy">
+            <div class="container-fluid buyButton">
+                <div class="row">
+                    <div class="col-11 align-self-center" style="padding: 0;">
+                        <h3 align="center">@Model.Price.ToString("N2")</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3" style="padding: 0;">
+                        @Html.Hidden("productId", Model.Id)
+                        <button type="submit" class="btn btn-success" style="width:100%">Buy</button>
+                    </div>
+                    <div class="col-4" style="padding: 0; padding-left:20px;">
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
