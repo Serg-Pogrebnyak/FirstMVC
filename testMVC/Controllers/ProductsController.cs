@@ -7,6 +7,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TestMVC.Extensions;
 using TestMVC.Models;
 using TestMVC.ViewModels;
@@ -18,15 +19,17 @@ namespace TestMVC.Controllers
         private readonly int countOfElenetPerPage = 6;
         private readonly UserManager<User> userManager;
         private readonly IProductService productService;
+        private readonly ILogger logger;
         private readonly ICategoryService categoryService;
         private readonly IOrderService orderService;
 
-        public ProductsController(IOrderService orderService, UserManager<User> userManager, IProductService productService, ICategoryService categoryService)
+        public ProductsController(IOrderService orderService, UserManager<User> userManager, ILogger<ProductsController> logger, IProductService productService, ICategoryService categoryService)
         {
             this.userManager = userManager;
             this.productService = productService;
             this.categoryService = categoryService;
             this.orderService = orderService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -100,7 +103,15 @@ namespace TestMVC.Controllers
             }
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            this.logger.LogError(id.ToString());
+            return this.RedirectToAction("Create");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Buy(int productId)
         {
             User user = await this.GetCurrentUserAsync();
