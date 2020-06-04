@@ -38,8 +38,10 @@ namespace TestMVC.Controllers
         public async Task<IActionResult> ProductDetail(string tag, int id)
         {
             this.logger.LogError(tag.ToString());
-            this.logger.LogError(id.ToString());
-            return this.View("ProductDetailView");
+            ProductDTO productDTO = this.productService.GetProductById(id);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
+            var productDetailViewModel = mapper.Map<ProductDTO, ProductForDisplayViewModel>(productDTO);
+            return this.View("ProductDetailView", productDetailViewModel);
         }
 
         [HttpGet]
