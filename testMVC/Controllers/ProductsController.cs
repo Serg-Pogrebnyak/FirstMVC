@@ -59,10 +59,7 @@ namespace TestMVC.Controllers
         {
             ProductViewModel productViewModel = new ProductViewModel { ReturnURL = this.Request.Headers["Referer"].ToString() };
 
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
-
-            this.ViewBag.Categories = categoryList;
+            this.ViewBag.Categories = this.GetAllCategoryForDisplay();
             return this.View(productViewModel);
         }
 
@@ -93,7 +90,7 @@ namespace TestMVC.Controllers
                 else
                 {
                     this.ModelState.AddModelError(string.Empty, "Error in cloud - Selected category not found");
-                    this.ViewBag.Categories = this.categoryService.GetAllCategory();
+                    this.ViewBag.Categories = this.GetAllCategoryForDisplay();
                     return this.View();
                 }
 
@@ -101,7 +98,7 @@ namespace TestMVC.Controllers
             }
             else
             {
-                this.ViewBag.Categories = this.categoryService.GetAllCategory();
+                this.ViewBag.Categories = this.GetAllCategoryForDisplay();
                 return this.View();
             }
         }
@@ -110,12 +107,57 @@ namespace TestMVC.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            this.logger.LogError(id.ToString());
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
-            var categoryList = mapper.Map<IEnumerable<CategoriesDTO>, List<CategoriesForDisplayViewModel>>(this.categoryService.GetAllCategory());
+            this.ViewBag.Categories = this.GetAllCategoryForDisplay();
 
-            this.ViewBag.Categories = categoryList;
-            return this.View();
+            ProductDTO productDTO = this.productService.GetProductById(id);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, EditProductViewModel>()).CreateMapper();
+            var editProductViewModel = mapper.Map<ProductDTO, EditProductViewModel>(productDTO);
+            editProductViewModel.ReturnURL = this.Request.Headers["Referer"].ToString();
+            return this.View(editProductViewModel);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Edit(EditProductViewModel changedProduct)
+        {
+            if (this.ModelState.IsValid)
+            {
+                if (this.categoryService.ContainCategoryWithName(changedProduct.Category))
+                {
+                    ProductDTO productDTO = new ProductDTO
+                    {
+                        Id = changedProduct.Id,
+                        Name = changedProduct.Name,
+                        Price = changedProduct.Price,
+                        Description = changedProduct.Description,
+                        LongDescription = changedProduct.LongDescription
+                    };
+                    if (changedProduct.File != null)
+                    {
+                        byte[] imageData = null;
+                        using (var binaryReader = new BinaryReader(changedProduct.File.OpenReadStream()))
+                        {
+                            imageData = binaryReader.ReadBytes((int)changedProduct.File.Length);
+                        }
+
+                        productDTO.ImageInByte = imageData;
+                    }
+
+                    this.productService.UpdateProduct(productDTO, changedProduct.Category);
+                    return this.Redirect(changedProduct.ReturnURL);
+                }
+                else
+                {
+                    this.ModelState.AddModelError(string.Empty, "Error in cloud - Selected category not found");
+                    this.ViewBag.Categories = this.categoryService.GetAllCategory();
+                    return this.View(changedProduct);
+                }
+            }
+            else
+            {
+                this.ViewBag.Categories = this.categoryService.GetAllCategory();
+                return this.View(changedProduct);
+            }
         }
 
         [HttpGet]
@@ -136,5 +178,11 @@ namespace TestMVC.Controllers
         }
 
         private async Task<User> GetCurrentUserAsync() => await this.userManager.GetUserAsync(this.HttpContext.User);
+
+        private CategoriesForDisplayViewModel[] GetAllCategoryForDisplay()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoriesDTO, CategoriesForDisplayViewModel>()).CreateMapper();
+            return mapper.Map<IEnumerable<CategoriesDTO>, CategoriesForDisplayViewModel[]>(this.categoryService.GetAllCategory());
+        }
     }
 }

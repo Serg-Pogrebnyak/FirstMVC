@@ -1,25 +1,33 @@
-﻿@model TestMVC.ViewModels.ProductViewModel
+﻿@model TestMVC.ViewModels.EditProductViewModel
 @{
     ViewData["Title"] = "Edit Product";
 }
-<form method="Post" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
+<form method="Post" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
+    @Html.Hidden("ReturnURL", Model.ReturnURL)
+    @Html.Hidden("Id", Model.Id)
     <div asp-validation-summary="ModelOnly"></div>
     <div>
         <label asp-for="Name"></label><br />
-        <input asp-for="Name" />
+        <input asp-for="Name" value="@Model.Name"/>
         <span asp-validation-for="Name"></span>
     </div>
 
     <div>
         <label asp-for="Price"></label><br />
-        <input asp-for="Price" />
+        <input asp-for="Price" value="@Model.Price"/>
         <span asp-validation-for="Price"></span>
     </div>
 
     <div>
         <label asp-for="Description"></label><br />
-        <input asp-for="Description" />
+        <input asp-for="Description" value="@Model.Description"/>
         <span asp-validation-for="Description"></span>
+    </div>
+
+    <div>
+        <label asp-for="LongDescription"></label><br />
+        <textarea asp-for="LongDescription" class="form-control" text-wrap:normal" type="text" placeholder="Please add Long Description"  value="@Model.LongDescription"></textarea>
+        <span asp-validation-for="LongDescription"></span>
     </div>
 
     <div>
@@ -42,5 +50,5 @@
         <span asp-validation-for="File"></span>
     </div>
 
-    <input class="btn btn-success" type="submit" value="Создать" />
+    <input class="btn btn-success" type="submit" value="Save Changes" />
 </form>

@@ -7,6 +7,10 @@ namespace BLL.Interfaces
     {
         public IEnumerable<ProductDTO> GetAllProduct();
 
+        public ProductDTO GetProductById(int id);
+
         public void CreateNewProduct(ProductDTO newProduct, string name);
+
+        public void UpdateProduct(ProductDTO productDTO, string categoryName);
     }
 }
