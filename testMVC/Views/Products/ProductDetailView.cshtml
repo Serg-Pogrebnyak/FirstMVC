@@ -5,19 +5,22 @@
             <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
         </div>
         <div class="col-3">
-            <div class="row">
-                <div class="col-3" style="padding: 0;">
-                    <a style="width:100%" class="btn btn-success" asp-area="" asp-controller="Products" asp-action="Buy" asp-route-productId="@Model.Id">Buy</a>
+            <form method="get" asp-controller="Products" asp-action="Buy">
+                <input type="hidden" name="productId" value=@Model.Id />
+                <div class="row">
+                    <div class="col-3" style="padding: 0;">
+                        <input style="width:100%" class="btn btn-success" type="submit" value="Buy" />
+                    </div>
+                    <div class="col-4" style="padding: 0; padding-left:20px;">
+                        <select class="form-control" id="ControlSelect"  name="countOfProduct">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-4" style="padding: 0; padding-left:20px;">
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        @for (int i = 1; i <= 10; i++)
-                        {
-                            <option>@i</option>
-                        }
-                    </select>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 

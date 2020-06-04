@@ -36,7 +36,7 @@ namespace TestMVC.Controllers
         [Route("Products/Index/{tag}/{id?}")]
         public async Task<IActionResult> ProductDetail(string tag, int id)
         {
-            this.logger.LogError(tag.ToString());
+            this.logger.LogDebug(tag.ToString());
             ProductDTO productDTO = this.productService.GetProductById(id);
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
             var productDetailViewModel = mapper.Map<ProductDTO, ProductForDisplayViewModel>(productDTO);
@@ -101,6 +101,7 @@ namespace TestMVC.Controllers
 
                     productDTO.ImageInByte = imageData;
                     this.productService.CreateNewProduct(productDTO, newProduct.Category);
+                    return this.Redirect(newProduct.ReturnURL);
                 }
                 else
                 {
@@ -108,8 +109,6 @@ namespace TestMVC.Controllers
                     this.ViewBag.Categories = this.GetAllCategoryForDisplay();
                     return this.View();
                 }
-
-                return this.Redirect(newProduct.ReturnURL);
             }
             else
             {
@@ -176,8 +175,9 @@ namespace TestMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Buy(int productId)
+        public async Task<IActionResult> Buy(int productId, int countOfProduct)
         {
+            this.logger.LogError(countOfProduct.ToString());
             User user = await this.GetCurrentUserAsync();
             if (user != null)
             {
