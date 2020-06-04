@@ -8,8 +8,9 @@
         <input class="btn btn-success" type="submit" value="Create" />
     </form>
 }
-<form method="get" asp-controller="Products" asp-action="Index">
-    <div class="container-fluid">
+<div class="container-fluid">
+    <form method="get" asp-controller="Products" asp-action="Index">
+        @Html.Hidden("CurrentPage", Model.CurrentPage)
         <div class="row">
             <div class="col-7">
                 @await Html.PartialAsync("_SortPartialView.cshtml", Model)
@@ -19,33 +20,37 @@
             <div class="col-2">
                 @await Html.PartialAsync("_FilterPartialView.cshtml", Model)
             </div>
-            <div class="col-10">
-                <div class="row">
-                    @for (int i = 0; i < @Model.ProductArray.Count(); i++)
-                    {
-                        <div class="col-lg-5 col-xl-4">
-                            @await Html.PartialAsync("_ProductPartialView.cshtml", Model.ProductArray[i])
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-        
+    </form>
+    <div class="col-10">
         <div class="row">
-            <div class="col">
-                <ul class="pagination justify-content-center">
-                    <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
-                    @if (Model.HasPrevious)
-                    {
-                        <li class="page-item"><input class="page-link" type="submit" name='Submit' value="Previous" /></li>
-                    }
-                    @if (Model.HasNext)
-                    {
-                        <li class="page-item"><input class="page-link" type="submit" name='Submit' value="Next" /></li>
-                    }
-                </ul>
-            </div>
+            @for (int i = 0; i < @Model.ProductArray.Count(); i++)
+            {
+                <div class="col-lg-5 col-xl-4">
+                    @await Html.PartialAsync("_ProductPartialView.cshtml", Model.ProductArray[i])
+                </div>
+            }
         </div>
+    </div>
+</div>
 
+<form method="get" asp-controller="Products" asp-action="Index">
+    @Html.Hidden("PriceFrom", Model.PriceFrom)
+    @Html.Hidden("PriceTo", Model.PriceTo)
+    @Html.Hidden("Sort", Model.Sort)
+    @Html.Hidden("CurrentPage", Model.CurrentPage)
+    <div class="row">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                @if (Model.HasPrevious)
+                {
+                    <li class="page-item"><input class="page-link" type="submit" name='Submit' value="Previous" /></li>
+                }
+                @if (Model.HasNext)
+                {
+                    <li class="page-item"><input class="page-link" type="submit" name='Submit' value="Next" /></li>
+                }
+            </ul>
+        </div>
     </div>
 </form>
+</div>

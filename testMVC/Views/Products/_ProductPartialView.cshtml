@@ -3,7 +3,12 @@
 <div onclick="location.href='@Model.DetailURL'" class="card" style="width: 16rem; height: 26rem; cursor: pointer;">
     @if (this.User.IsInRole("Admin"))
     {
-        <a style="position : absolute; top:0; left: 0;" class="btn btn-info" asp-area="" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <div style="position : absolute; top:0; left: 0;">
+            <form method="get" asp-controller="Products" asp-action="Edit">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input class="btn btn-info" type="submit" value="Edit" />
+            </form>
+        </div>
     }
     <img class="card-img-top" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImageInByte))">
     <div class="card-body">
