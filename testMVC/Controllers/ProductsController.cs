@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
@@ -33,6 +34,15 @@ namespace TestMVC.Controllers
         }
 
         [HttpGet]
+        [Route("Products/Index/{tag}/{id?}")]
+        public async Task<IActionResult> ProductDetail(string tag, int id)
+        {
+            this.logger.LogError(tag.ToString());
+            this.logger.LogError(id.ToString());
+            return this.View("ProductDetailView");
+        }
+
+        [HttpGet]
         [Route("Products/Index/{id?}")]
         public IActionResult Index(string id, PaginationProductViewModel paginationModel)
         {
@@ -47,9 +57,13 @@ namespace TestMVC.Controllers
 
             mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductForDisplayViewModel>()).CreateMapper();
             var productList = mapper.Map<IEnumerable<ProductDTO>, List<ProductForDisplayViewModel>>(paginationTuple.elements);
+            foreach (ProductForDisplayViewModel item in productList)
+            {
+                item.DetailURL = $"{id}/{item.Id}";
+            }
+
             paginationModel.ProductArray = productList.ToArray();
             paginationModel.HasNext = paginationTuple.countOfPages > (paginationModel.CurrentPage + 1); // plus one because start calculating from zero
-
             return this.View(paginationModel);
         }
 

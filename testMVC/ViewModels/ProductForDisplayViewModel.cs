@@ -13,5 +13,7 @@
         public string LongDescription { get; set; }
 
         public byte[] ImageInByte { get; set; }
+
+        public string DetailURL { get; set; }
     }
 }

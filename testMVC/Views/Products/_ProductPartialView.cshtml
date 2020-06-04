@@ -1,6 +1,6 @@
 ﻿@model TestMVC.ViewModels.ProductForDisplayViewModel
 <link rel="stylesheet" href="~/css/site.css" />
-<div class="card" style="width: 16rem; height: 26rem;">
+<div onclick="location.href='@Model.DetailURL'" class="card" style="width: 16rem; height: 26rem; cursor: pointer;">
     @if (this.User.IsInRole("Admin"))
     {
         <a style="position : absolute; top:0; left: 0;" class="btn btn-info" asp-area="" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
