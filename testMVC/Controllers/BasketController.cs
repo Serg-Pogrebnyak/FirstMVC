@@ -65,6 +65,21 @@ namespace TestMVC.Controllers
             return this.RedirectToAction("Index");
         }
 
+        public async Task<ActionResult> MakeOrder()
+        {
+            User user = await this.GetCurrentUserAsync();
+            if (user != null)
+            {
+                this.orderService.MakeOrder(user.Id);
+            }
+            else
+            {
+                this.HttpContext.RemoveBasketFromSession();
+            }
+
+            return this.View("CongratulationView");
+        }
+
         private async Task<User> GetCurrentUserAsync() => await this.userManager.GetUserAsync(this.HttpContext.User);
     }
 }

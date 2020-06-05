@@ -27,6 +27,7 @@ namespace DAL.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProductInBasket>().HasOne(p => p.Basket).WithMany(t => t.Products).OnDelete(DeleteBehavior.Cascade);
             // set relationship
             modelBuilder.Entity<Product>().HasOne(p => p.Category).WithMany(p => p.Products).HasForeignKey(p => p.CategoriesId);
             // get defaultdata from initial class

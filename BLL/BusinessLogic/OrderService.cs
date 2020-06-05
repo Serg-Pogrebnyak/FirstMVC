@@ -109,6 +109,13 @@ namespace BLL.BusinessLogic
             }
         }
 
+        public void MakeOrder(string userId)
+        {
+            Basket basket = this.db.Repository.GetAll<Basket>().SingleOrDefault(basket => basket.UserId == userId);
+            this.db.Repository.Delete<Basket>(basket.Id);
+            this.db.Save();
+        }
+
         // private function
         private IEnumerable<ProductInBasketDTO> MapperGetProductsFromBasket(IEnumerable<ProductCache> productIdArray)
         {

@@ -14,5 +14,7 @@ namespace BLL.Interfaces
         public string DeleteProductFromBasket(int productId, string userId = null, string basketInCache = null);
 
         public void MigrateBasketFromCookie(string userId, string basketInCache);
+
+        public void MakeOrder(string userId);
     }
 }
