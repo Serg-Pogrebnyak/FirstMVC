@@ -26,20 +26,20 @@ namespace TestMVC.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await this.GetCurrentUserAsync();
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductDTO, ProductInBasketViewModel>()).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductInBasketDTO, ProductInBasketViewModel>()).CreateMapper();
 
             List<ProductInBasketViewModel> orderList = new List<ProductInBasketViewModel> { };
             if (user != null)
             {
                 this.ViewBag.TotalAmount = this.orderService.GetOrderTotalAmount(user.Id);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(userId: user.Id));
+                orderList = mapper.Map<IEnumerable<ProductInBasketDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(userId: user.Id));
                 return this.View(orderList);
             }
             else if (this.HttpContext.IsContainBasket())
             {
                 string cocieBasket = this.HttpContext.GetBasket();
                 this.ViewBag.TotalAmount = this.orderService.GetOrderTotalAmount(basketInCache: cocieBasket);
-                orderList = mapper.Map<IEnumerable<ProductDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
+                orderList = mapper.Map<IEnumerable<ProductInBasketDTO>, List<ProductInBasketViewModel>>(this.orderService.GetAllProductsInBasket(basketInCache: cocieBasket));
                 return this.View(orderList);
             }
 

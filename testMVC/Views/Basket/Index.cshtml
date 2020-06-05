@@ -1,23 +1,26 @@
 ﻿@model IEnumerable<TestMVC.ViewModels.ProductInBasketViewModel>
-<h3> Ваша корзина </h3>
+<h3> Your Basket </h3>
 <table class="table">
     <tr>
-        <th>Категории</th>
-        <th colspan="2">Цена</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Count</th>
+        <th></th>
     </tr>
     @foreach (var product in Model)
     {
         <tr>
             <td> @product.Name</td>
             <td> @product.Price</td>
+            <td> @product.Count</td>
             <td>
                 <form method="post" asp-controller="Basket" asp-action="Delete">
                     <input type="hidden" name="productId" value=@product.Id />
-                    <input class="btn btn-danger" type="submit" value="Удалить из корзины" />
+                    <input class="btn btn-danger" type="submit" value="Remove from basket" />
                 </form>
              </td>
         </tr>
     }
-<tr><td colspan="3">Итоговая сумма: @ViewBag.TotalAmount</td></tr>
+<tr><td colspan="3">Total amount: @ViewBag.TotalAmount</td></tr>
 
 </table>

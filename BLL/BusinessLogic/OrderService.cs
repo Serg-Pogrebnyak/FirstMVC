@@ -31,14 +31,14 @@ namespace BLL.BusinessLogic
             }
         }
 
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null)
+        public IEnumerable<ProductInBasketDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null)
         {
             if (userId != null)
             {
                 Basket basket = this.GetBasketByUserId(userId);
                 if (basket == null)
                 {
-                    return new List<ProductDTO> { };
+                    return new List<ProductInBasketDTO> { };
                 }
 
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ProductInBasket, ProductCache>()).CreateMapper();
@@ -110,18 +110,18 @@ namespace BLL.BusinessLogic
         }
 
         // private function
-        private IEnumerable<ProductDTO> MapperGetProductsFromBasket(IEnumerable<ProductCache> productIdArray)
+        private IEnumerable<ProductInBasketDTO> MapperGetProductsFromBasket(IEnumerable<ProductCache> productIdArray)
         {
-            List<ProductDTO> productsInBasketList = new List<ProductDTO> { };
+            List<ProductInBasketDTO> productsInBasketList = new List<ProductInBasketDTO> { };
             foreach (ProductCache productCache in productIdArray)
             {
                 Product product = this.db.Repository.Get<Product>(productCache.ProductId);
-                ProductDTO productDTO = new ProductDTO
+                ProductInBasketDTO productDTO = new ProductInBasketDTO
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Price = product.Price,
-                    Description = product.Description
+                    Count = productCache.ProductCount
                 };
                 productsInBasketList.Add(productDTO);
             }

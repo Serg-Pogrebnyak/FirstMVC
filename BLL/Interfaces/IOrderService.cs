@@ -5,7 +5,7 @@ namespace BLL.Interfaces
 {
     public interface IOrderService
     {
-        public IEnumerable<ProductDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null);
+        public IEnumerable<ProductInBasketDTO> GetAllProductsInBasket(string userId = null, string basketInCache = null);
 
         public int GetOrderTotalAmount(string userId = null, string basketInCache = null);
 

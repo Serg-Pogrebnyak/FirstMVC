@@ -1,6 +1,6 @@
-﻿namespace TestMVC.ViewModels
+﻿namespace BLL.DTO
 {
-    public class ProductInBasketViewModel
+    public class ProductInBasketDTO
     {
         public int Id { get; set; }
 
