@@ -4,6 +4,6 @@ namespace BLL.DTO
 {
     public class BasketCache
     {
-        public List<int> ProductsId { get; set; }
+        public List<ProductCache> Products { get; set; }
     }
 }

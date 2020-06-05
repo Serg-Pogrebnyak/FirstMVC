@@ -181,11 +181,11 @@ namespace TestMVC.Controllers
             User user = await this.GetCurrentUserAsync();
             if (user != null)
             {
-                this.orderService.AddProductInBasket(productId, userId: user.Id);
+                this.orderService.AddProductInBasket(productId, countOfProduct, userId: user.Id);
             }
             else
             {
-                string basketCockie = this.orderService.AddProductInBasket(productId, basketInCache: this.HttpContext.GetBasket());
+                string basketCockie = this.orderService.AddProductInBasket(productId, countOfProduct, basketInCache: this.HttpContext.GetBasket());
                 this.HttpContext.SetBasket(basketCockie);
             }
 

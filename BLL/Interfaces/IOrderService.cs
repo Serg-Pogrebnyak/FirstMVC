@@ -9,7 +9,7 @@ namespace BLL.Interfaces
 
         public int GetOrderTotalAmount(string userId = null, string basketInCache = null);
 
-        public string AddProductInBasket(int productId, string userId = null, string basketInCache = null);
+        public string AddProductInBasket(int productId, int count, string userId = null, string basketInCache = null);
 
         public string DeleteProductFromBasket(int productId, string userId = null, string basketInCache = null);
 
